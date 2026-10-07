@@ -24,6 +24,6 @@ The runtime assets are embedded as data URIs in `src/assets.gen.js` so the publi
 | referee whistle.mp3, stadium crowd roar/cheering.mp3, football-practice-huddle-pad-hits.mp3 | — | replaced | not used any more (replaced by Mixkit sounds below) |
 | Mixkit free SFX (cached in `assets/sfx`): 615 police short whistle, 462 huge crowd cheering victory, 3022 stadium joy shouting crowd, 2150 impact of a blow, 2153 body punch quick hit | `sfx_whistle`, `sfx_roar`, `sfx_cheer`, `sfx_hit1`, `sfx_hit2` | trimmed, mono 64 kbps | whistles/flags, touchdowns, title/finale, snaps/tackles |
 | 28 team logos + AFC/NFC logos | `tm_XXX`, `afc`, `nfc` | trim, 160 px | league grid, conference headers |
-| YouTube: Butler INT / Minneapolis Miracle / Mike Jones tackle | `yt_butler`, `yt_miracle`, `yt_jones` (thumbnails) | inlined thumbnail; ▶ opens YouTube in the same tab (NFL blocks embedding) | ch14, ch04, ch15 |
+| YouTube: Butler INT / Minneapolis Miracle / Mike Jones tackle | `yt_butler`, `yt_miracle`, `yt_jones` (thumbnails) | inlined thumbnail; ▶ opens YouTube in a new tab (NFL blocks embedding) | ch14, ch04, ch15 |
 
 Unused: `ne_png` (SVG preferred), EPS/AI originals (not browser formats), duplicate logo variants in the zips.

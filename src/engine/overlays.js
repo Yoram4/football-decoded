@@ -145,7 +145,7 @@
   OV.compare = (o) => `${o.t ? `<div class="p-t">${md(o.t)}</div>` : ''}<div class="cmp">${o.cols.map((c) => `<div class="cc" style="--cc:${c.c || '#38bdf8'}"><div class="ct">${md(c.t)}</div><ul>${(c.items || []).map((x) => `<li>${md(x)}</li>`).join('')}</ul></div>`).join('')}</div>${o.foot ? `<div class="p-foot">${md(o.foot)}</div>` : ''}`;
 
   // ---------- YouTube replay ----------
-  // The NFL blocks these clips from embedded players, so ▶ opens YouTube in this tab; Back returns to the slide.
+  // The NFL blocks these clips from embedded players, so ▶ opens YouTube in a new tab.
   const YT = { butler: 'U7rPIg7ZNQ8', miracle: 'OJzpoj_NxqQ', jones: 'MqRkWAwnJik' };
   OV.video = (o) => {
     const id = YT[o.yt] || o.yt;
@@ -163,6 +163,6 @@
   FD.videoPlay = (el, id, o) => {
     if (!navigator.onLine) { FD.toast(T('Offline: the replay needs an internet connection')); return; }
     FD.stopSfx();
-    location.assign(`https://www.youtube.com/watch?v=${encodeURIComponent(id)}${o.start ? `&t=${+o.start}s` : ''}`);
+    window.open(`https://www.youtube.com/watch?v=${encodeURIComponent(id)}${o.start ? `&t=${+o.start}s` : ''}`, '_blank', 'noopener');
   };
 })(window.FD);

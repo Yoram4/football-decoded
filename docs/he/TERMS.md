@@ -28,7 +28,9 @@ Rule from the client: **football concept names stay in English or in Hebrew tran
 | goal line | קו הגול |
 | red zone | הרד זון (האזור האדום) |
 | hash marks | ההאש מארקס |
-| sideline / out of bounds | קו הצד / מחוץ לגבולות |
+| sideline / out of bounds | קו הצד / מחוץ לקווים (מחוץ למגרש) |
+| challenge | צ'אלנג' / צ'אלנג'ים (not אתגר) |
+| pick-six | פיק-סיקס (חטיפה שמוחזרת לטאצ'דאון) |
 | snap / huddle / audible | סנאפ / האדל / אודיבל |
 | drive | דרייב |
 | possession | החזקה בכדור |
@@ -41,7 +43,7 @@ Rule from the client: **football concept names stay in English or in Hebrew tran
 | linebacker | ליינבקר |
 | cornerback / safety (player) / nickel | קורנרבק / סייפטי / ניקל |
 | kicker / punter / long snapper / returner | קיקר / פאנטר / לונג סנאפר / מחזיר בעיטות |
-| sack / interception / fumble | סאק / אינטרספשן (חטיפה) / פאמבל |
+| sack / interception / fumble | סאק / חטיפה (אינטרספשן) / פאמבל |
 | turnover / turnover on downs | טרנאובר (איבוד כדור) / טרנאובר און דאונס |
 | punt / kickoff / onside kick | פאנט / קיקאוף / און-סייד קיק |
 | touchback / fair catch | טאצ'באק / פייר קאץ' |
