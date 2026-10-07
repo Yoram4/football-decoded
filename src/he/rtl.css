@@ -1,0 +1,55 @@
+/* ---------- Hebrew / RTL overrides (appended by build.py --lang he) ---------- */
+:root{
+  --hd:'Bebas Neue','Secular One',Impact,'Arial Narrow',sans-serif;
+  --num:Oswald,'Secular One','Arial Narrow',sans-serif;
+  --ui:Heebo,Inter,system-ui,'Segoe UI',Arial,sans-serif;
+}
+/* the field is a coordinate system, not text: keep it LTR */
+#field{direction:ltr}
+.mk-text,.rt-lbl,.zone-lbl{unicode-bidi:plaintext}
+/* score bug stays English broadcast-style */
+#bug{direction:ltr}
+/* Hebrew doesn't like wide tracking */
+#l3 .k,.tag,#badge,.rn,.cn small,.zone-lbl,.ln-lbl{letter-spacing:0}
+.t-t,.b-t,.ci-t,.p-t,#l3 .t{letter-spacing:0}
+
+/* lower third: accent bar on the reading-start side */
+#l3,.rp-l3{border-left:0;border-right:.8vh solid var(--ne-red)}
+#l3{background:linear-gradient(270deg,rgba(0,34,68,.97),rgba(10,58,112,.95))}
+#l3.nyj{background:linear-gradient(270deg,rgba(18,87,64,.97),rgba(13,63,46,.95));border-right-color:#fff}
+.ov-chapter{border-left:0;border-right:1vh solid var(--ne-red)}
+.w-quiz{border-left:1px solid rgba(255,255,255,.14);border-right:.8vh solid var(--fd-yellow)}
+.qz-why{border-left:0;border-right:.5vh solid #22c55e}
+.fr-l{border-left:1px solid rgba(255,255,255,.2);border-right:.5vh solid var(--fd-yellow)}
+.fr-n.cur .fr-l{border-right-color:#ff4d4d}
+.pv-an,.pv-ex,.pv-w{border-left:0}
+.pv-an{border-right:4px solid #22c55e}.pv-ex{border-right:4px solid #38bdf8}.pv-w{border-right:4px solid #FACC15}
+
+/* HUD chrome keeps the English layout in both languages; only text reads RTL. */
+#tags{direction:ltr}
+#counter,#explainToggle,.desk-tools,.key-hints,.touch-nav{direction:ltr}
+#counter span,#tags .tag{direction:rtl}
+#explainPanel{border-left:1px solid rgba(255,255,255,.18);border-right:4px solid var(--ne-red)}
+
+/* bullets */
+.p-list li{padding-left:0;padding-right:2.4vh}
+.p-list li::before{left:auto;right:0}
+.ci-list li{padding-left:0;padding-right:3vh}
+.ci-list li::before{left:auto;right:.4vh}
+.cc li::before{content:'◂ '}
+#pvNow ul,.x-card ul{padding-left:0;padding-right:22px}
+.x-card ul{padding-right:2.2vh}
+
+/* buttons/menus read right-to-left */
+.t-menu button,.mn-grid button,.qz-o{text-align:right}
+.mn-deep{margin-left:0;margin-right:auto}
+.div.hl{box-shadow:inset -.5vh 0 0 var(--fd-yellow);padding-left:0;padding-right:.8vh}
+.cn small{margin-left:0;margin-right:1vh}
+.lg-head b{margin-right:0;margin-left:.6vh}
+.mx .row.tot img{margin-right:0;margin-left:1vh}
+
+/* playoff bracket: keep AFC left / NFC right like the TV graphic, text inside reads RTL */
+.br{direction:ltr}
+.sd{direction:rtl;border-left:0;border-right:.4vh solid var(--tc,#64748b)}
+.sd.bye::after{margin-left:0;margin-right:auto}
+.bn,.rn,.sb{direction:rtl}
