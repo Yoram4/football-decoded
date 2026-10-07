@@ -105,13 +105,7 @@
       ${o.foot ? `<div class="p-foot br-foot">${md(o.foot)}</div>` : ''}`;
   };
   OV.bracket_update = (el, o) => {
-    const stage = o.stage ?? 4;
-    ['r1', 'r2', 'r3'].forEach((round, i) => el.querySelector(`.col.${round}`).classList.toggle('on', stage >= i + 1));
-    el.querySelector('.sb').classList.toggle('on', stage >= 4);
-    let foot = el.querySelector('.br-foot');
-    if (!o.foot) { foot && foot.remove(); return; }
-    if (!foot) { foot = FD.h('div', { class: 'p-foot br-foot' }); el.appendChild(foot); }
-    foot.innerHTML = md(o.foot);
+    el.innerHTML = OV.bracket(o);
   };
 
   OV.signal = (o) => `<div class="sg-img"><img src="${A('sig' + o.sig)}" alt="Signal ${o.sig}"><span class="sg-n">#${o.sig}</span></div>

@@ -15,18 +15,19 @@ Rule from the client: **football concept names stay in English or in Hebrew tran
 | football | פוטבול |
 | touchdown | טאצ'דאון |
 | field goal | פילד גול (שער שדה) |
-| extra point / PAT / try | אקסטרה פוינט / ניסיון הנקודה הנוספת (Try) |
+| extra point / PAT / try | ניסיון נקודה נוספת (PAT / Try) |
 | two-point conversion | ניסיון ל-2 נקודות (2-Point) |
 | safety (score) | סייפטי |
-| down / downs | דאון / דאונים (or "ניסיון" in plain-language explanations) |
+| down / downs | דאון / דאונים; on first use: דאונים (ניסיון/ות) |
+| first / second / third / fourth down | דאון ראשון / דאון שני / דאון שלישי / דאון רביעי |
 | 1st & 10 (in sentences) | "דאון ראשון ו-10" (1st & 10) |
-| first down | פירסט דאון |
+| first down | דאון ראשון |
 | yard(s) | יארד / יארדים |
-| line of scrimmage | קו הסקרימג' (קו המגע) |
+| line of scrimmage | קו המגע |
 | line to gain / yellow line | קו הפירסט דאון (הקו הצהוב) |
 | end zone | אנד זון |
 | goal line | קו הגול |
-| red zone | הרד זון (האזור האדום) |
+| red zone | רד זון |
 | hash marks | ההאש מארקס |
 | sideline / out of bounds | קו הצד / מחוץ לקווים (מחוץ למגרש) |
 | challenge | צ'אלנג' / צ'אלנג'ים (not אתגר) |
@@ -36,13 +37,13 @@ Rule from the client: **football concept names stay in English or in Hebrew tran
 | possession | החזקה בכדור |
 | offense / defense / special teams | התקפה / הגנה / ספיישל טימס |
 | quarterback | קוורטרבק |
-| running back / fullback | ראנינג בק / פולבק |
+| running back / fullback | רץ (ראנינג בק) / פולבק |
 | wide receiver / tight end | ווייד רסיבר (תופס) / טייט אנד |
 | offensive line / center / guard / tackle | קו ההתקפה / סנטר / גארד / טאקל |
 | defensive line / end / tackle / nose tackle | קו ההגנה / דיפנסיב אנד / דיפנסיב טאקל / נוז טאקל |
 | linebacker | ליינבקר |
 | cornerback / safety (player) / nickel | קורנרבק / סייפטי / ניקל |
-| kicker / punter / long snapper / returner | קיקר / פאנטר / לונג סנאפר / מחזיר בעיטות |
+| kicker / punter / long snapper / returner | בועט (קיקר) / פאנטר / לונג סנאפר / מחזיר בעיטות |
 | sack / interception / fumble | סאק / חטיפה (אינטרספשן) / פאמבל |
 | turnover / turnover on downs | טרנאובר (איבוד כדור) / טרנאובר און דאונס |
 | punt / kickoff / onside kick | פאנט / קיקאוף / און-סייד קיק |
@@ -56,10 +57,10 @@ Rule from the client: **football concept names stay in English or in Hebrew tran
 | quarter / halftime / overtime | רבע / מחצית / הארכה |
 | game clock / play clock | שעון המשחק / שעון המהלך (Play Clock) |
 | timeout / two-minute warning | פסק זמן / אזהרת שתי הדקות |
-| conference / division | קונפרנס / דיוויז'ן |
+| conference / division | חטיבה (Conference) / בית (Division) |
 | playoffs / wild card / bye | פלייאוף / ווילד קארד / ביי (שבוע מנוחה) |
 | Super Bowl / draft / salary cap / free agency | סופרבול / דראפט / תקרת שכר / פרי אייג'נסי |
-| referee / officials | רפרי (השופט הראשי) / שופטים |
+| referee / officials | שופט / שופטים |
 | play (a single play) | מהלך |
 | Patriots / Jets / Bills / Dolphins / Seahawks | פטריוטס / ג'טס / בילס / דולפינס / סיהוקס (full: ניו אינגלנד פטריוטס, ניו יורק ג'טס) |
 | Gillette Stadium, Foxborough | אצטדיון ג'ילט, פוקסבורו |

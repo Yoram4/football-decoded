@@ -12,7 +12,6 @@
           p: ['Searchable glossary. Type a word (e.g. "blitz", "touchback", "red zone").',
             'Each term has a button that jumps back to the step where we explained it.',
             'Press G anywhere to open it as an overlay.'],
-          a: 'The index at the back of the book.',
           x: 'About 50 terms; the rulebook has its own Definitions section (Rule 3) for the official wording.',
         },
       },

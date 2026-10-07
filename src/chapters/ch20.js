@@ -20,7 +20,6 @@
         l3: null,
         notes: {
           p: ['The whole guide in one screen.', 'If you remember only one thing: 4 downs to gain 10 yards. Everything else hangs on that.'],
-          a: 'You learned the board, the pieces and the moves.',
           x: 'Next level: watch the All-22 coaches film on NFL+ to see all 22 players on every snap.',
         },
       },
@@ -35,7 +34,6 @@
         notes: {
           p: ['Same play as the cold open. At the start it was just circles and lines.',
             'Now: 1st & 10 at the Jets 48, 11 personnel, the defense shows one deep safety (Cover 1), the X receiver runs a post right at him… touchdown.'],
-          a: 'Rereading the first page of a book after you finished it.',
           x: 'Post vs single-high: the QB holds the safety with his eyes before throwing.',
         },
       },
@@ -48,7 +46,6 @@
         l3: null, sfx: ['cheer'],
         notes: {
           p: ['That\'s the game. Patriots win our story game 24–20.', 'Next time you watch, look at the bug, the yellow line, and the safeties before the snap.'],
-          a: 'You went from tourist to local.',
           x: 'The 2026 Patriots open the season as defending AFC champions.',
         },
       },
@@ -58,7 +55,6 @@
         ov: [{ id: 'bn', type: 'logos', pos: 'b', items: ['lombardi', 'ne', 'pat'], cap: '2001 · 2003 · 2004 · 2014 · 2016 · 2018' }],
         notes: {
           p: ['Six championship banners hang at Gillette.', 'And last February the Patriots were back in the Super Bowl. The next banner is what Foxborough is playing for.'],
-          a: 'Every fan base has a trophy case; ours is a little crowded.',
           x: '12 Super Bowl appearances is the most of any franchise.',
         },
       },
@@ -69,7 +65,6 @@
         bug: { hide: true },
         notes: {
           p: ['Want to revisit something? M jumps to any chapter, G searches any term, and ← → replay any step.', 'Draw on any play yourself with the telestrator (T).'],
-          a: 'The guide stays open: come back any time.',
           x: 'Watching a real game? Keep the glossary (G) open on your phone.',
         },
       },

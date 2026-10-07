@@ -49,7 +49,7 @@ Inheritance: keys you omit are inherited from the previous step **in the same ch
 | `sfx` | sounds on forward entry: `'whistle'|'roar'|'cheer'|'hit'|'hit2'|'huddle'` or `{n:'hit', at:ms}` |
 | `auto` | ms → auto-advance (use sparingly) |
 | `deep` | `true` = Film Room step (blueprint skin, skippable with D) |
-| `notes` | REQUIRED: `{p:[3–6 talking points], a:'beginner analogy', x:'If an expert asks… answer'}` |
+| `notes` | `{p:[talking points], a?:'analogy only when it makes the concept clearer', aTitle?:'optional analogy heading', x?:'expert detail'}` |
 
 ### Overlay types (`ov`)
 - `big {k,t,s,c}` hero text center. `title` (used once in ch00).
@@ -92,5 +92,5 @@ Asset keys (images): `nfl ne ne_png ne_helmet ne_endzone ne_wordmark pat nyj nyj
 - Mark rules changed in the last ~3 seasons with a tag `'NEW RULE: …'` (dynamic kickoff 2024; touchback-to-35 2025; regular-season OT both-possess 2025; 2026 onside anytime). NCAA differences as `'COLLEGE: …'`.
 - If unsure, phrase conservatively and add `'VERIFY: …'` to `tags` (it renders as a dashed chip) — never invent.
 - Fictional players only: positions + jersey numbers, no real current player names (historic plays in videos are fine to name, e.g. Malcolm Butler).
-- On-screen text minimal and broadcast-style. Notes carry the explanation: 3–6 points in presenter voice, one beginner analogy, one expert answer.
+- Keep on-screen text minimal and broadcast-style. Notes carry the explanation in presenter voice. Use an analogy only when it makes an otherwise unclear concept easier to understand; don't force one. Expert detail is optional.
 - Every step must make sense going backward too: always define the FULL set of `players` and `routes` you want visible (they inherit, so set `routes: []` when a play ends).
