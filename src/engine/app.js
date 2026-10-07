@@ -75,7 +75,7 @@
     const m = FD.$('#menu');
     if (m.classList.contains('on')) { m.classList.remove('on'); return; }
     const cur = FD.STEPS[FD.idx]._c;
-    m.innerHTML = `<div class="mn-head"><img src="${FD.asset('nfl')}" alt=""><img src="${FD.asset('ne')}" alt=""><b>${FD.T('Football, Decoded')}</b><span>${FD.T('Chapters · press a tile or Esc')}</span>
+    m.innerHTML = `<div class="mn-head"><img src="${FD.asset('nfl')}" alt=""><b>${FD.T('Football Guide')}</b><span>${FD.T('Chapters · press a tile or Esc')}</span>
       <button class="mn-deep">${FD.skipDeep ? FD.T('Film Room: OFF (D)') : FD.T('Film Room: ON (D)')}</button></div>
       <div class="mn-grid">${FD.CH.map((c, i) => `<button class="${i === cur ? 'cur' : ''} ${c.deep ? 'deep' : ''}" data-go="${i}"><b>${String(i).padStart(2, '0')}</b><span>${FD.esc(c.title)}</span><small>${FD.esc(c.sub || '')}</small></button>`).join('')}</div>`;
     m.querySelectorAll('[data-go]').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); m.classList.remove('on'); if (+b.dataset.go !== cur) FD.goChapter(+b.dataset.go); }));
@@ -230,7 +230,7 @@
   function bootPresenter() {
     document.body.classList.add('presenter');
     document.body.innerHTML = `<div id="pv">
-      <header><img src="${FD.asset('ne')}" alt=""><b>${FD.T('Presenter view')}</b><span id="pvTimer">00:00</span><span id="pvClock"></span><button id="pvReset">${FD.T('reset timer')}</button></header>
+      <header><img src="${FD.asset('nfl')}" alt=""><b>${FD.T('Presenter view')}</b><span id="pvTimer">00:00</span><span id="pvClock"></span><button id="pvReset">${FD.T('reset timer')}</button></header>
       <main><section id="pvNow"></section><aside><div class="pv-lbl">${FD.T('NEXT')}</div><div id="pvNextT"></div><iframe id="pvPrev" title="next step preview"></iframe>
       <div class="pv-ctl"><button data-c="prev">${FD.T('◀ Back')}</button><button data-c="next">${FD.T('Next ▶')}</button><button data-c="chUp">${FD.T('▲ Chapter')}</button><button data-c="chDown">${FD.T('▼ Chapter')}</button><button data-c="deep">${FD.T('D Film Room')}</button><button data-c="replay">${FD.T('R Replay')}</button></div></aside></main></div>`;
     let t0 = Date.now();
@@ -254,7 +254,7 @@
       FD.$('#pvNow').innerHTML = `<div class="pv-ch">${String(st._c).padStart(2, '0')} · ${FD.esc(st._ch.title)} <span>${FD.T('step {a}/{b}', { a: st._s + 1, b: st._ch.steps.length })}</span>${st.deep ? `<em>${FD.T('FILM ROOM')}</em>` : ''}</div>
         <h2>${FD.esc(st.title)}</h2>${st.l3 && st.l3.s ? `<div class="pv-cap">${FD.T('On screen:')} “${FD.md(st.l3.s)}”</div>` : ''}
         <ul>${(n.p || []).map((p) => `<li>${FD.md(p)}</li>`).join('')}</ul>
-        ${n.a ? `<div class="pv-an"><b>${FD.T('Analogy')}</b> ${FD.md(n.a)}</div>` : ''}${n.x ? `<div class="pv-ex"><b>${FD.T('If an expert asks…')}</b> ${FD.md(n.x)}</div>` : ''}${st.w ? `<div class="pv-w">${FD.T('Interactive:')} <b>${typeof st.w === 'string' ? st.w : st.w.name}</b> ${FD.T('(keys shown on screen)')}</div>` : ''}`;
+        ${n.x ? `<div class="pv-ex"><b>${FD.T('If an expert asks…')}</b> ${FD.md(n.x)}</div>` : ''}${st.w ? `<div class="pv-w">${FD.T('Interactive:')} <b>${typeof st.w === 'string' ? st.w : st.w.name}</b> ${FD.T('(keys shown on screen)')}</div>` : ''}`;
       FD.$('#pvNextT').innerHTML = nx ? `<b>${FD.esc(nx.title)}</b> <span>${FD.esc(nx._ch.title)}</span>` : `<b>${FD.T('End')}</b>`;
       if (nx) FD.$('#pvPrev').src = location.pathname + `?mode=preview${FD.BILINGUAL ? `&lang=${FD.LANG}` : ''}#c=${nx._c}&s=${nx._s}`;
     };
@@ -265,9 +265,9 @@
   function bootExplore() {
     document.body.classList.add('explore');
     const col = FD.h('div', { id: 'xcol' });
-    col.innerHTML = `<div class="x-intro"><img src="${FD.asset('ne')}" alt=""><h1>${FD.T('Football, Decoded')}</h1><p>${FD.T('Scroll to explore. The field on the left follows along.')}</p></div>` +
+    col.innerHTML = `<div class="x-intro"><img src="${FD.asset('nfl')}" alt=""><h1>${FD.T('Football Guide')}</h1><p>${FD.T('The rules, strategy, and stories behind every NFL game.')}</p></div>` +
       FD.STEPS.map((s, i) => `<article class="x-card ${s.deep ? 'deep' : ''}" data-i="${i}">${s._s === 0 ? `<div class="x-ch">${String(s._c).padStart(2, '0')} · ${FD.esc(s._ch.title)}</div>` : ''}
-        <h3>${FD.esc(s.title)}</h3>${s.l3 && s.l3.s ? `<p class="x-cap">${FD.md(s.l3.s)}</p>` : ''}<ul>${(s.notes.p || []).slice(0, 4).map((p) => `<li>${FD.md(p)}</li>`).join('')}</ul>${s.notes.a ? `<p class="x-an">${FD.md(s.notes.a)}</p>` : ''}</article>`).join('');
+        <h3>${FD.esc(s.title)}</h3>${s.l3 && s.l3.s ? `<p class="x-cap">${FD.md(s.l3.s)}</p>` : ''}<ul>${(s.notes.p || []).slice(0, 4).map((p) => `<li>${FD.md(p)}</li>`).join('')}</ul></article>`).join('');
     document.body.appendChild(col);
     const io = new IntersectionObserver((ents) => {
       ents.forEach((en) => { if (en.isIntersecting) { const i = +en.target.dataset.i; if (i !== FD.idx) FD.goto(i, { forward: i > FD.idx }); FD.$$('.x-card.on').forEach((c) => c.classList.remove('on')); en.target.classList.add('on'); } });

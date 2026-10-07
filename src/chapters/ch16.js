@@ -6,16 +6,16 @@
     base: { cam: { x: 60, y: 26.67, w: 190 }, bug: {} },
     steps: [
       {
-        title: 'Where the Patriots sit',
+        title: 'The division in the league',
         bug: { reset: true, hide: true },
         cam: { x: 60, y: 26.67, w: 190 },
         players: [], routes: [], marks: [], zones: [], los: null, fd: null, ball: false,
         ov: [{ id: 'lg', type: 'league', pos: 'c', hl: 'AFC East' }],
-        l3: { k: 'Quick reminder', t: 'AFC East', s: 'Bills · Dolphins · Patriots · Jets' },
+        l3: { k: 'One of 8 divisions', t: 'AFC East', s: 'Bills · Dolphins · Patriots · Jets' },
         notes: {
-          p: ['Before we zoom out to the whole season: remember where we live. AFC, East division, with Buffalo, Miami and the Jets.',
+          p: ['The AFC East is one of eight divisions in the NFL. It includes Buffalo, Miami, New England and the Jets.',
             'Almost everything about the schedule and the playoffs is built on this grid of 2 conferences and 8 divisions.',
-            'Keep the AFC East in mind: it decides 6 of our 17 games and our easiest path to the playoffs.'],
+            'A team plays its division rivals twice each season: 6 of 17 games.'],
           a: 'The division is your homeroom: the same classmates every year.',
           x: 'The 8×4 alignment has been fixed since 2002, which is what makes the rotating schedule formula possible.',
         },
@@ -27,7 +27,7 @@
         notes: {
           p: ['A football year in one ribbon. March: free agency opens the new league year. April: the Draft. May–June: OTAs and minicamp.',
             'Late July: training camp. August: preseason, 3 exhibition games per team that don\'t count.',
-            'September to early January: the regular season. 18 weeks, 17 games, 1 bye week per team. In 2026 it kicked off on September 9 with the Patriots at Seattle.',
+            'September to early January: the regular season. 18 weeks, 17 games, 1 bye week per team.',
             'Only 17 games: compare 82 in the NBA or 162 in baseball. One NFL game is worth about 10 baseball games.',
             'January: playoffs, 14 teams. February: the Super Bowl.',
             'Because it crosses New Year, a season is named for the year it starts. The 2025 season ended with Super Bowl LX in February 2026.'],
@@ -41,7 +41,7 @@
         notes: {
           p: ['The 17 opponents aren\'t random. There\'s a fixed formula, the same for all 32 teams.',
             'Step 1: your 3 division rivals, twice each (once at home, once away). That\'s 6 games.',
-            'So the Patriots see the Bills, Dolphins and Jets twice every single season.'],
+            'For example, AFC East teams play Buffalo, Miami, New England and the Jets twice each season.'],
           x: 'Division record is also the 2nd tiebreaker for winning the division, so these 6 games count double in practice.',
         },
       },
@@ -179,8 +179,7 @@
         notes: {
           p: ['After the Divisional round, two teams remain in each conference. They play the Conference Championship: the winner is the AFC or NFC champion.',
             'The two champions meet in the Super Bowl, played at a neutral site chosen years in advance.',
-            'The Patriots were AFC champions last season and reached Super Bowl LX, losing to Seattle.',
-            'Winner gets the Lombardi Trophy. The Patriots have six.'],
+            'The winner receives the Vince Lombardi Trophy.'],
           a: 'The World Cup final: the venue is picked long before anyone knows who\'ll be in it.',
           x: 'Playoff overtime differs from the regular season: 15-minute periods, both teams get a possession, and it continues until there\'s a winner (Rule 16-1).',
         },

@@ -3,7 +3,7 @@
   'use strict';
   Object.assign(FD.I18N, {
     // ---- app / menu / toasts ----
-    'Football, Decoded': 'פוטבול, מפוענח',
+    'Football Guide': 'מדריך פוטבול',
     'Chapters · press a tile or Esc': 'פרקים · לחצו על אריח או Esc',
     'Film Room: ON (D)': 'חדר הווידאו: פועל (D)',
     'Film Room: OFF (D)': 'חדר הווידאו: כבוי (D)',
@@ -63,7 +63,6 @@
 
     // ---- overlays ----
     'Coming up': 'מה בהמשך',
-    'Analogy': 'השוואה',
     'Why it matters': 'למה זה חשוב',
     'Job': 'תפקיד',
     'Typical size': 'מידות טיפוסיות',
@@ -95,7 +94,7 @@
     'Super Bowl': 'סופרבול',
 
     // schedule matrix
-    'How the Patriots\' 17 opponents are picked': 'איך נקבעות 17 היריבות של הפטריוטס',
+    'How the NFL schedule is built': 'איך נקבע לוח המשחקים של ה-NFL',
     'The same formula applies to every team': 'אותה נוסחה חלה על כל קבוצה',
     'Division': 'בית',
     'Home & away vs each rival': 'בית וחוץ מול כל יריבה',

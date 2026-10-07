@@ -10,7 +10,7 @@ The runtime assets are embedded as data URIs in `src/assets.gen.js` so the publi
 | …/new-england-patriots-helmet-logo.png | `ne_helmet` | 420 px | player cards (NE) |
 | new england patriots logo end zone.png | `ne_endzone`, `ne_endzone_ko` | letters → white, Flying Elvis kept navy (connected-component knockout) | NE end zone paint |
 | patriots logo wordmark.png | `ne_wordmark` | trim padding | available (title/finale) |
-| patriots logo pat the patriot.png | `pat` | 420 px | ch01 Border War, finale banners |
+| patriots logo pat the patriot.png | `pat` | 420 px | Patriots team examples |
 | new-york-jets-2024-logo-pack.zip → .svg | `nyj` | SVG kept (white via CSS in bug) | score-bug chip, matrix |
 | …/new-york-jets-helmet-logo-2024.png | `nyj_helmet` | 420 px | player cards (NYJ) |
 | New York Jets Logo green.png | `nyj_wordmark`, `nyj_ko` | white knockout | NYJ end zone paint |
@@ -18,7 +18,7 @@ The runtime assets are embedded as data URIs in `src/assets.gen.js` so the publi
 | superbowl lombardy trophy logo.png | `lombardi` | 420 px | calendar, bracket, finale |
 | CBS/FOX/NBC/SNF/ESPN/Prime logos (incl. zips) | `tv_*` | trim, ≤ 520×260, white chips | ch16 TV slots |
 | Gillette Stadium photos (3) | `photo_gillette`, `photo_gillette_fw`, `photo_gillette_fw2` | JPEG q80 | cold open, TD, title, ch01, finale |
-| Patriots 6 Banners at Gillette stadium.webp | `photo_banners` | JPEG q82 | ch01 "Why New England", finale |
+| Patriots 6 Banners at Gillette stadium.webp | `photo_banners` | JPEG q82 | Retained in the embedded asset bundle; no longer used in the guide |
 | NFL - New England Patriots vs. Buffalo Bills … .png | `photo_broadcast` | JPEG 1920 q80 | ch17 annotated broadcast frame |
 | NFL Rulebook 2026.pdf | external reference; `sig1…sig33` embedded in `src/assets.gen.js` | official signals cropped (pp. 73–78) | rules source; ch13 signal cards (+ch03/04/05) |
 | referee whistle.mp3, stadium crowd roar/cheering.mp3, football-practice-huddle-pad-hits.mp3 | — | replaced | not used any more (replaced by Mixkit sounds below) |

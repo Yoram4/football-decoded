@@ -1,4 +1,4 @@
-/* Football, Decoded — Sunday Night Broadcast theme (+ Blueprint skin for Film Room) */
+/* Football Guide — Sunday Night Broadcast theme (+ Blueprint skin for Film Room) */
 :root{
   --ne-navy:#002244;--ne-red:#C60C30;--ne-silver:#B0B7BC;--ne-white:#FFFFFF;
   --nyj-green:#125740;--nyj-black:#000000;--nyj-white:#FFFFFF;
@@ -359,6 +359,7 @@ body.preview .key-hints,body.preview .desk-tools{display:none}
 .fr-n.cur .fr-l{display:block;border-left-color:#ff4d4d}
 
 .ov-clock{padding:1.6vh 2vh}
+.ov-clock.pos-r{width:max-content;max-width:calc(100vw - 5vw)}
 .ck{display:flex;gap:2.4vh}
 .ck>div{text-align:center;min-width:16vw;background:rgba(0,0,0,.35);border-radius:8px;padding:1.2vh 1.6vh;border:1px solid rgba(255,255,255,.1)}
 .ck small{display:block;font:700 1.5vh var(--ui);letter-spacing:.16em;color:var(--mute)}

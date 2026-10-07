@@ -131,7 +131,7 @@
           p: ['Swap one lineman for one linebacker and you have a 3-4.',
             'The nose tackle sits right over the center and eats double-teams. The outside linebackers stand up on the edges.',
             'Why do it? The offense doesn\'t know which of the four linebackers will rush. Pressure from anywhere.',
-            'Patriots fans saw a lot of multiple fronts over the years: the label matters less than who rushes and who drops.'],
+            'Teams can use multiple fronts: the label matters less than who rushes and who drops.'],
           a: '4-3 vs 3-4 is like 4 forwards + 3 midfielders vs 3 forwards + 4 midfielders. Same team size, different priorities.',
           x: 'Classic 3-4 linemen play "two-gap" (control the blocker, play both gaps); many modern 3-4 teams actually play one-gap with the OLBs as stand-up DEs, so it\'s often a 4-3 "under" by another name.',
         },

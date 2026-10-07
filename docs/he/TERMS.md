@@ -1,4 +1,4 @@
-# Hebrew translation guide — "Football, Decoded" (עברית)
+# Hebrew translation guide — "מדריך פוטבול" (עברית)
 
 Audience: Israeli beginners → casual fans. Presenter voice, plural "אתם", modern sports Hebrew (like ynet / ספורט 5 / ויקיפדיה). No nikud.
 Rule from the client: **football concept names stay in English or in Hebrew transliteration** (e.g. טאצ'דאון). Don't invent literal Hebrew calques for core terms. On the FIRST appearance of a core term in a chapter's on-screen text you may add the English in parentheses: "טאצ'דאון (Touchdown)". Notes can use either form naturally.

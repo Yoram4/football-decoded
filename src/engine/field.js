@@ -49,8 +49,8 @@
       <rect x="-4" y="-4" width="128" height="${H + 8}" class="bpgrid" fill="url(#pgrid)"/>
       <rect x="-4" y="-4" width="128" height="${H + 8}" class="bpgrid" fill="url(#pgrid5)"/>
       <g class="ezart">
-        ${neEZ ? `<image href="${neEZ}" x="-17.5" y="-4.86" width="35" height="9.73" transform="translate(5 ${FD.MID}) rotate(-90)"/>` : `<text class="eztext" transform="translate(5 ${FD.MID}) rotate(-90)">PATRIOTS</text>`}
-        ${nyEZ ? `<image href="${nyEZ}" x="-15" y="-4.64" width="30" height="9.28" transform="translate(115 ${FD.MID}) rotate(90)"/>` : `<text class="eztext" transform="translate(115 ${FD.MID}) rotate(90)">JETS</text>`}
+        ${neEZ ? `<image href="${neEZ}" x="-13.125" y="-3.645" width="26.25" height="7.298" transform="translate(5 ${FD.MID}) rotate(-90)"/>` : `<text class="eztext" transform="translate(5 ${FD.MID}) rotate(-90)">PATRIOTS</text>`}
+        ${nyEZ ? `<image href="${nyEZ}" x="-11.25" y="-3.48" width="22.5" height="6.96" transform="translate(115 ${FD.MID}) rotate(90)"/>` : `<text class="eztext" transform="translate(115 ${FD.MID}) rotate(90)">JETS</text>`}
       </g>
       ${nfl ? `<image class="midlogo" href="${nfl}" x="${60 - 3.8}" y="${FD.MID - 5}" width="7.6" height="10"/>` : ''}
       <g class="fl-line" fill="none">

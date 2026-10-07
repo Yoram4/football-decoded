@@ -1,4 +1,4 @@
-/* Football, Decoded — core: namespace, utils, timeline, audio, chapter registry */
+/* Football Guide — core: namespace, utils, timeline, audio, chapter registry */
 window.FD = window.FD || {};
 (function (FD) {
   'use strict';

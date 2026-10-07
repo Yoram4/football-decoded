@@ -1,4 +1,4 @@
-# Chapter authoring contract — "Football, Decoded"
+# Chapter authoring contract — "Football Guide"
 
 You write ONE OR MORE chapter files `src/chapters/chNN.js`. Do not edit any other file.
 Validate each with: `node tests/check_chapter.js src/chapters/chNN.js` (must print OK).

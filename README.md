@@ -1,6 +1,6 @@
-# Football, Decoded
+# Football Guide
 
-A single-file, bilingual NFL field guide for New England Patriots fans. The checked-in `index.html` is the self-contained GitHub Pages and offline-sharing build; editable source lives in `src/`.
+A single-file, bilingual guide to NFL rules, strategy, and the league. New England Patriots and New York Jets examples help make the game easier to follow. The checked-in `index.html` is the self-contained GitHub Pages and offline-sharing build; editable source lives in `src/`.
 
 ## Build
 

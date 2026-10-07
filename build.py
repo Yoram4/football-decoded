@@ -52,7 +52,7 @@ FD.applyLanguage = (lang) => {
   FD.LANG = lang;
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
-  document.title = lang === 'he' ? 'פוטבול, מפוענח — מדריך ניו אינגלנדי ל-NFL' : 'Football, Decoded — A New England Field Guide to the NFL';
+  document.title = lang === 'he' ? 'מדריך פוטבול — החוקים, האסטרטגיה והסיפורים שמאחורי משחקי ה-NFL' : 'Football Guide — The rules, strategy, and stories behind every NFL game';
   const rtl = document.getElementById('heRtlStyles');
   if (rtl) rtl.media = lang === 'he' ? 'all' : 'not all';
   const badge = FD.$('#badge');
@@ -110,7 +110,7 @@ if BILINGUAL:
     RTL_STYLE = f'<style id="heRtlStyles" media="not all">\n{rtl_css}\n</style>'
 
 LANG_ATTR = 'lang="he" dir="rtl"' if HE else 'lang="en"'
-TITLE = "פוטבול, מפוענח — מדריך ניו אינגלנדי ל-NFL" if HE else "Football, Decoded / פוטבול, מפוענח" if BILINGUAL else "Football, Decoded — A New England Field Guide to the NFL"
+TITLE = "מדריך פוטבול — החוקים, האסטרטגיה והסיפורים שמאחורי משחקי ה-NFL" if HE else "Football Guide / מדריך פוטבול" if BILINGUAL else "Football Guide — The rules, strategy, and stories behind every NFL game"
 FONTS = "&family=Heebo:wght@400;500;600;700;800;900&family=Secular+One" if HE or BILINGUAL else ""
 BADGE = "חדר הווידאו · למתקדמים" if HE else "FILM ROOM · DEEP DIVE"
 

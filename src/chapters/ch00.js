@@ -1,4 +1,4 @@
-/* Chapter 0 — Cold Open: Gillette at night → 4th-quarter Patriots drive → TD → title card */
+/* Chapter 0 — Cold Open: an NFL game → a late drive → touchdown → title card */
 (function (FD) {
   const { F, R } = FD;
   const M = FD.MID;
@@ -32,9 +32,9 @@
         notes: {
           p: ['Welcome. Tonight you are going to learn football the way TV explains it: on the field, one play at a time.',
             'This is Gillette Stadium, home of the New England Patriots since 2002.',
-            'Our story game: Patriots vs. Jets, the AFC East "Border War". Patriots trail 20–17 with two minutes left.',
-            'Don\'t worry about understanding everything in the next 30 seconds. Just watch. We will decode all of it.'],
-          x: 'Gillette opened in 2002, replacing Foxboro Stadium; the Patriots have played in Foxborough since 1971.',
+            'Our example is an AFC East matchup: Patriots vs. Jets, with New England trailing 20–17 and two minutes left.',
+            'Don\'t worry about understanding everything in the next 30 seconds. Just watch. The guide will break it down.'],
+          x: 'The score and game situation are illustrative; the play-by-play is designed to show how to read a late-game drive.',
         },
       },
       {
@@ -90,11 +90,11 @@
         notes: { p: ['Touchdown Patriots! Six points. Patriots lead 23–20.', 'In the next hour, every single thing you just saw will make sense: the lines, the numbers, the routes, the clock.'], a: 'You just watched your first drive. Now we learn the rules of the road.', x: 'They still have a try (extra point or 2-point conversion) to add.' },
       },
       {
-        title: 'Football, Decoded',
+        title: 'Football Guide',
         photo: { key: 'photo_gillette_fw2', dim: 0.62, over: true },
         players: [], routes: [], los: null, fd: null, cam: { x: 60, y: 26.67, w: 132 },
         bug: { hs: 24, msg: null, down: null, clk: '', pc: null, q: 'FINAL' },
-        ov: [{ id: 'title', type: 'title', pos: 'c', k: 'A New England field guide to the NFL', t: 'Football, Decoded', s: 'From total beginner to Sunday-ready fan', menu: true }],
+        ov: [{ id: 'title', type: 'title', pos: 'c', k: 'The rules, strategy, and stories behind every NFL game', t: 'Football Guide', menu: true }],
         sfx: ['cheer'],
         notes: {
           p: ['Patriots win 24–20 after the extra point. That\'s our title card.',

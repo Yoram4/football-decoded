@@ -26,7 +26,7 @@
   const OV = FD.OV;
 
   OV.title = (o) => `
-    ${o.logo !== false ? `<div class="t-logos"><img src="${A('nfl')}" class="t-nfl" alt="NFL"><img src="${A('ne')}" class="t-ne" alt="Patriots"></div>` : ''}
+    ${o.logo !== false ? `<div class="t-logos"><img src="${A('nfl')}" class="t-nfl" alt="NFL"></div>` : ''}
     ${o.k ? `<div class="t-k">${md(o.k)}</div>` : ''}
     <h1 class="t-t">${md(o.t)}</h1>
     ${o.s ? `<div class="t-s">${md(o.s)}</div>` : ''}
@@ -81,7 +81,7 @@
       ['place2', '2', 'Same-place AFC teams', 'From the 2 remaining AFC divisions', 'Based on last year\u2019s finish'],
       ['g17', '1', '17th game', 'Same-place NFC team', 'From an NFC division not already on the schedule'],
     ];
-    return `<div class="mx-head"><img src="${A('ne')}" alt=""><div><b>${T('How the Patriots\' 17 opponents are picked')}</b><small>${T('The same formula applies to every team')}</small></div></div>
+    return `<div class="mx-head"><img src="${A('nfl')}" alt=""><div><b>${T('How the NFL schedule is built')}</b><small>${T('The same formula applies to every team')}</small></div></div>
       <div class="mx">${R.map((r) => `<div class="row ${o.hl === r[0] || o.hl === 'all' ? 'hl' : ''} ${o.hl && o.hl !== r[0] && o.hl !== 'all' ? 'dim' : ''} ${o.show && !o.show.includes(r[0]) ? 'hidden' : ''}" data-mx-key="${r[0]}"><div class="g">${r[1]}</div><div><b>${T(r[2])}</b><span>${T(r[3])}</span></div><div class="nt">${T(r[4])}</div></div>`).join('')}
       <div class="row tot"><div class="g">17</div><div><b>${T('games')}</b><span>${T('over 18 weeks (1 bye)')}</span></div><div class="nt">${A('buf') ? `<img src="${A('buf')}"><img src="${A('mia')}"><img src="${A('nyj')}">` : ''}</div></div></div>`;
   };

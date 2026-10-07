@@ -1,4 +1,4 @@
-# PLAN — Football, Decoded (generated from src/chapters, 189 steps)
+# PLAN — Football Guide (generated from src/chapters, 189 steps)
 
 ## 00 Cold Open — 7 steps
 - s01 **Gillette Stadium, Foxborough**
@@ -7,15 +7,15 @@
 - s04 **Play 2: run, +12** — Clock keeps running: hurry to the line
 - s05 **Play 3: deep post…** — One deep safety. The receiver runs right at him
 - s06 **TOUCHDOWN**
-- s07 **Football, Decoded**
+- s07 **Football Guide**
 
 ## 01 The League in 60 Seconds — 6 steps
 - s01 **32 teams** — Two conferences, eight divisions of four
 - s02 **AFC vs NFC** — Each conference crowns a champion; they meet in the Super Bowl
-- s03 **The AFC East** — Bills · Dolphins · Patriots · Jets
-- s04 **The Border War: Patriots vs Jets** — Navy circles vs Jets X's, all talk long
-- s05 **Why New England** — 6 titles (tied for most) · 12 Super Bowl trips (most ever) · 2025 AFC champions
-- s06 **Home: Gillette Stadium** — Home of the Patriots since 2002 · about 65,000 seats
+- s03 **One AFC East division** — Bills · Dolphins · Patriots · Jets
+- s04 **The teams in our examples** — Patriots and Jets, two teams in one division
+- s05 **The playoff race** — 14 teams make the playoffs
+- s06 **A home stadium** — Gillette Stadium, one NFL venue
 
 ## 02 The Field — 8 steps
 - s01 **120 yards × 53⅓** — Two teams, two end zones, one ball
@@ -230,4 +230,3 @@
 - s03 **Foxborough**
 - s04 **Six banners**
 - s05 **Thank you**
-
