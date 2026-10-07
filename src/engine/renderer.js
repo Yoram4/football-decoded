@@ -89,12 +89,14 @@
       <g id="fdl" class="ln-fd"><line x1="0" y1="0" x2="0" y2="53.33" filter="url(#fglow)"/><text class="ln-lbl" x=".5" y="2.2">${FD.T('LINE TO GAIN')}</text></g>
       <g id="ballG"><ellipse rx=".55" ry=".32" class="ball"/><path d="M-.25 0h.5" class="lace"/></g>`;
     hud = FD.$('#hud'); ovLayer = FD.$('#ov'); wLayer = FD.$('#wl'); photoEl = FD.$('#photo');
+    hud.appendChild(FD.h('div', { id: 'phoneTitle', 'aria-hidden': 'true' }));
     FD._pl = new Map(); FD._rt = new Map(); FD._zn = new Map(); FD._mk = new Map(); FD._ov = new Map();
     FD.camNow = { ...FD.DEFAULTS.cam };
     setVB(FD.camNow);
     addEventListener('resize', () => {
       if (FD.cur) FD.camNow = phoneCamera(FD.cur.cam, FD.cur);
       setVB(FD.camNow);
+      FD.updateTouchProgress && FD.updateTouchProgress(FD.idx);
     });
   };
 
@@ -105,6 +107,55 @@
     const h = c.w * asp;
     svg.setAttribute('viewBox', `${(c.x - c.w / 2).toFixed(3)} ${(c.y - h / 2).toFixed(3)} ${c.w.toFixed(3)} ${h.toFixed(3)}`);
   }
+  const PHONE_DETAILS_TYPES = new Set(['panel', 'stats', 'compare', 'signal', 'timeline', 'card']);
+  FD.isPhoneFieldDiagram = (st) => matchMedia('(max-width:700px) and (orientation:portrait)').matches &&
+    (st.players || []).length >= 8 &&
+    (['routes', 'zones', 'marks'].some((k) => (st[k] || []).length) || (st.ov || []).some((o) => PHONE_DETAILS_TYPES.has(o.type)));
+  FD.hasPhoneDiagramDetails = (st) => FD.isPhoneFieldDiagram(st) &&
+    (st.ov || []).some((o) => PHONE_DETAILS_TYPES.has(o.type));
+
+  function phoneDiagramCamera(target, st) {
+    const xs = [], ys = [];
+    const add = (x, y) => {
+      if (Number.isFinite(x) && Number.isFinite(y)) { xs.push(x); ys.push(y); }
+    };
+    const addPoints = (points) => (points || []).forEach((p) => {
+      if (Array.isArray(p)) add(p[0], p[1]);
+    });
+
+    (st.players || []).forEach((p) => add(p.x, p.y));
+    (st.routes || []).forEach((r) => addPoints(r.d));
+    if (st.ball && typeof st.ball === 'object') add(st.ball.x, st.ball.y);
+    (st.zones || []).forEach((z) => {
+      if (z.ell) {
+        add(z.ell[0] - z.ell[2], z.ell[1] - z.ell[3]);
+        add(z.ell[0] + z.ell[2], z.ell[1] + z.ell[3]);
+      } else if (z.rect) {
+        add(z.rect[0], z.rect[1]);
+        add(z.rect[0] + z.rect[2], z.rect[1] + z.rect[3]);
+      } else addPoints(z.d);
+    });
+    (st.marks || []).forEach((m) => {
+      if (m.d) addPoints(m.d);
+      if (m.x1 != null && m.y1 != null) add(m.x1, m.y1);
+      if (m.x2 != null && m.y2 != null) add(m.x2, m.y2);
+      if (m.x != null && m.y != null) {
+        add(m.x, m.y);
+        if (m.w != null && m.h != null) add(m.x + m.w, m.y + m.h);
+      }
+    });
+    if (st.los != null) xs.push(st.los);
+    if (st.fd != null) xs.push(st.fd);
+    if (!xs.length || !ys.length) return { ...target, w: Math.min(target.w, 46) };
+
+    const r = svg.getBoundingClientRect();
+    const aspect = r.height / Math.max(1, r.width) || 9 / 16;
+    const minX = Math.min(...xs), maxX = Math.max(...xs);
+    const minY = Math.min(...ys), maxY = Math.max(...ys);
+    const w = Math.max(28, maxX - minX + 10, (maxY - minY + 8) / aspect);
+    return { ...target, x: (minX + maxX) / 2, y: (minY + maxY) / 2, w };
+  }
+
   function camera(to, instant) {
     const from = { ...FD.camNow }, tgt = { ...FD.DEFAULTS.cam, ...to };
     const same = from.x === tgt.x && from.y === tgt.y && from.w === tgt.w;
@@ -118,6 +169,7 @@
   function phoneCamera(cam, st) {
     const target = { ...FD.DEFAULTS.cam, ...cam };
     if (!matchMedia('(max-width:700px) and (orientation:portrait)').matches) return target;
+    if (FD.isPhoneFieldDiagram(st)) return phoneDiagramCamera(target, st);
 
     const routes = (st.routes || []).filter((r) => r.move && r.d && r.d.length);
     const ball = routes.find((r) => r.p === 'BALL' && (r.k === 'pass' || r.k === 'kick'));
@@ -425,6 +477,7 @@
     stage.classList.toggle('frame-active', (st.ov || []).some((o) => o.type === 'frame'));
     stage.classList.toggle('bp', st.skin === 'bp');
     stage.classList.toggle('deep', !!st.deep);
+    stage.classList.toggle('diagram-phone', !!FD.isPhoneFieldDiagram(st));
     camera(phoneCamera(st.cam, st), instant);
     lines(st, instant);
     zones(st, instant);

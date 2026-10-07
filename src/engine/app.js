@@ -95,6 +95,17 @@
   const btn = (action, label, html) => `<button type="button" data-action="${action}" aria-label="${FD.esc(label)}" title="${FD.esc(label)}">${html}</button>`;
   const ACTIONS = {
     prev: () => FD.prev(), next: () => FD.next(), menu: () => openMenu(),
+    details: () => {
+      const stage = FD.$('#stage');
+      const open = stage.classList.toggle('diagram-details-open');
+      const button = FD.$('#touchNav [data-action="details"]');
+      if (button) {
+        const label = FD.T(open ? 'Hide slide details' : 'Show slide details');
+        button.setAttribute('aria-label', label);
+        button.title = label;
+        button.setAttribute('aria-pressed', String(open));
+      }
+    },
     mute: () => FD.toggleMute(), lang: () => FD.switchLanguage(),
   };
   function bindActions(root) {
@@ -109,7 +120,7 @@
 
     const nav = FD.h('nav', { id: 'touchNav', class: 'touch-nav', dir: 'ltr', 'aria-label': FD.T('Touch navigation') });
     nav.innerHTML = `<div class="touch-progress" role="progressbar" aria-label="${FD.T('Progress')}" aria-valuemin="1" aria-valuemax="${FD.STEPS.length}"><i></i></div>
-      <div class="touch-actions">${btn('prev', FD.T('Previous slide'), '<span aria-hidden="true">‹</span>')}${btn('menu', FD.T('Open menu'), '<span aria-hidden="true">☰</span>')}<span class="touch-count"></span>${btn('mute', muteLabel(), muteIcon())}${langBtn}${btn('next', FD.T('Next slide'), '<span aria-hidden="true">›</span>')}</div>`;
+      <div class="touch-actions">${btn('prev', FD.T('Previous slide'), '<span aria-hidden="true">‹</span>')}${btn('menu', FD.T('Open menu'), '<span aria-hidden="true">☰</span>')}${btn('details', FD.T('Show slide details'), '<span aria-hidden="true">i</span>')}<span class="touch-count"></span>${btn('mute', muteLabel(), muteIcon())}${langBtn}${btn('next', FD.T('Next slide'), '<span aria-hidden="true">›</span>')}</div>`;
     bindActions(nav);
 
     const tools = FD.h('div', { id: 'deskTools', class: 'desk-tools', dir: 'ltr' });
@@ -126,6 +137,27 @@
   FD.updateTouchProgress = (i) => {
     const st = FD.STEPS[i], bar = FD.$('#touchNav .touch-progress');
     if (!st || !bar) return;
+    const stage = FD.$('#stage');
+    const diagram = !!FD.isPhoneFieldDiagram?.(st);
+    if (stage.dataset.diagramStep !== st.id) {
+      stage.dataset.diagramStep = st.id;
+      stage.classList.remove('diagram-details-open');
+    }
+    stage.classList.toggle('diagram-phone', diagram);
+    const phoneTitle = FD.$('#phoneTitle');
+    if (phoneTitle) phoneTitle.textContent = st.title;
+    stage.classList.toggle('phone-title-on', diagram && !st.l3);
+    if (!diagram) stage.classList.remove('diagram-details-open');
+    const details = FD.$('#touchNav [data-action="details"]');
+    if (details) {
+      const available = !!FD.hasPhoneDiagramDetails?.(st);
+      const open = stage.classList.contains('diagram-details-open');
+      const label = FD.T(open ? 'Hide slide details' : 'Show slide details');
+      details.hidden = !available;
+      details.setAttribute('aria-label', label);
+      details.title = label;
+      details.setAttribute('aria-pressed', String(open));
+    }
     bar.firstElementChild.style.width = `${((i + 1) / FD.STEPS.length) * 100}%`;
     bar.setAttribute('aria-valuenow', i + 1);
     bar.setAttribute('aria-valuetext', `${st._ch.title}, ${FD.T('step {a}/{b}', { a: st._s + 1, b: st._ch.steps.length })}`);

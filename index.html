@@ -128,6 +128,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 #l3{position:absolute;right:2.5vw;bottom:3vh;min-width:30vw;max-width:48vw;padding:1.2vh 2.2vh 1.4vh;
   background:linear-gradient(90deg,rgba(0,34,68,.97),rgba(10,58,112,.95));border-left:.8vh solid var(--ne-red);box-shadow:0 1vh 3vh rgba(0,0,0,.5);
   transform:translateX(115%);opacity:0;transition:transform .38s cubic-bezier(.2,.8,.2,1),opacity .3s}
+#phoneTitle{display:none}
 #l3.on{transform:none;opacity:1}
 #l3.nyj{background:linear-gradient(90deg,rgba(18,87,64,.97),rgba(13,63,46,.95));border-left-color:#fff}
 #l3 .k{font:700 1.75vh var(--ui);letter-spacing:.18em;color:var(--ne-silver);text-transform:uppercase}
@@ -752,9 +753,36 @@ body.explore #stage{position:fixed;inset:0 38vw 0 0}
   .touch-count{min-width:58px;color:var(--mute);font:600 11px var(--ui);text-align:center;font-variant-numeric:tabular-nums}
   .touch-nav button{display:grid;place-items:center;width:40px;height:40px;padding:0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:5px;color:var(--ink);font:500 26px/1 var(--ui);touch-action:manipulation}
   .touch-nav button[data-action="menu"]{font-size:18px}
+  .touch-nav button[data-action="details"]{font-size:17px;font-weight:800}
   .touch-nav button[data-action="mute"]{font-size:16px}
   .touch-nav button[data-action="lang"]{font-size:11px;font-weight:800}
   .touch-nav button:hover,.touch-nav button:focus-visible{border-color:var(--fd-yellow);outline:none}
+}
+@media(max-width:700px) and (orientation:portrait){
+  .diagram-phone .ov-panel,.diagram-phone .ov-stats,.diagram-phone .ov-compare,.diagram-phone .ov-signal,
+  .diagram-phone .ov-timeline,.diagram-phone .ov-card{
+    visibility:hidden;opacity:0;pointer-events:none
+  }
+  .diagram-phone.diagram-details-open .ov-panel,.diagram-phone.diagram-details-open .ov-stats,
+  .diagram-phone.diagram-details-open .ov-compare,.diagram-phone.diagram-details-open .ov-signal,
+  .diagram-phone.diagram-details-open .ov-timeline,.diagram-phone.diagram-details-open .ov-card{
+    visibility:visible;opacity:1;pointer-events:auto
+  }
+  #phoneTitle{display:none}
+  .diagram-phone.phone-title-on #phoneTitle{
+    position:absolute;top:7.5vh;left:50%;translate:-50% 0;z-index:12;display:block;max-width:92vw;
+    padding:4px 9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    background:linear-gradient(90deg,rgba(0,34,68,.97),rgba(10,58,112,.95));border-left:3px solid var(--ne-red);
+    box-shadow:0 .5vh 2vh rgba(0,0,0,.4);font:700 16px/1.1 var(--hd);text-align:center;pointer-events:none
+  }
+  .diagram-phone #l3{
+    top:7.5vh;bottom:auto;left:50%;right:auto;width:max-content;min-width:0;max-width:92vw;
+    padding:4px 9px;border-left-width:3px;translate:-50% 0
+  }
+  .diagram-phone #l3 .k,.diagram-phone #l3 .s{display:none}
+  .diagram-phone #l3 .t{font-size:16px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .diagram-phone #l3.on{transform:translateY(0)}
+  .diagram-phone #explainToggle{top:calc(7.5vh + 34px);left:2vw;bottom:auto}
 }
 
 </style>
@@ -1118,12 +1146,14 @@ window.FD = window.FD || {};
       <g id="fdl" class="ln-fd"><line x1="0" y1="0" x2="0" y2="53.33" filter="url(#fglow)"/><text class="ln-lbl" x=".5" y="2.2">${FD.T('LINE TO GAIN')}</text></g>
       <g id="ballG"><ellipse rx=".55" ry=".32" class="ball"/><path d="M-.25 0h.5" class="lace"/></g>`;
     hud = FD.$('#hud'); ovLayer = FD.$('#ov'); wLayer = FD.$('#wl'); photoEl = FD.$('#photo');
+    hud.appendChild(FD.h('div', { id: 'phoneTitle', 'aria-hidden': 'true' }));
     FD._pl = new Map(); FD._rt = new Map(); FD._zn = new Map(); FD._mk = new Map(); FD._ov = new Map();
     FD.camNow = { ...FD.DEFAULTS.cam };
     setVB(FD.camNow);
     addEventListener('resize', () => {
       if (FD.cur) FD.camNow = phoneCamera(FD.cur.cam, FD.cur);
       setVB(FD.camNow);
+      FD.updateTouchProgress && FD.updateTouchProgress(FD.idx);
     });
   };
 
@@ -1134,6 +1164,55 @@ window.FD = window.FD || {};
     const h = c.w * asp;
     svg.setAttribute('viewBox', `${(c.x - c.w / 2).toFixed(3)} ${(c.y - h / 2).toFixed(3)} ${c.w.toFixed(3)} ${h.toFixed(3)}`);
   }
+  const PHONE_DETAILS_TYPES = new Set(['panel', 'stats', 'compare', 'signal', 'timeline', 'card']);
+  FD.isPhoneFieldDiagram = (st) => matchMedia('(max-width:700px) and (orientation:portrait)').matches &&
+    (st.players || []).length >= 8 &&
+    (['routes', 'zones', 'marks'].some((k) => (st[k] || []).length) || (st.ov || []).some((o) => PHONE_DETAILS_TYPES.has(o.type)));
+  FD.hasPhoneDiagramDetails = (st) => FD.isPhoneFieldDiagram(st) &&
+    (st.ov || []).some((o) => PHONE_DETAILS_TYPES.has(o.type));
+
+  function phoneDiagramCamera(target, st) {
+    const xs = [], ys = [];
+    const add = (x, y) => {
+      if (Number.isFinite(x) && Number.isFinite(y)) { xs.push(x); ys.push(y); }
+    };
+    const addPoints = (points) => (points || []).forEach((p) => {
+      if (Array.isArray(p)) add(p[0], p[1]);
+    });
+
+    (st.players || []).forEach((p) => add(p.x, p.y));
+    (st.routes || []).forEach((r) => addPoints(r.d));
+    if (st.ball && typeof st.ball === 'object') add(st.ball.x, st.ball.y);
+    (st.zones || []).forEach((z) => {
+      if (z.ell) {
+        add(z.ell[0] - z.ell[2], z.ell[1] - z.ell[3]);
+        add(z.ell[0] + z.ell[2], z.ell[1] + z.ell[3]);
+      } else if (z.rect) {
+        add(z.rect[0], z.rect[1]);
+        add(z.rect[0] + z.rect[2], z.rect[1] + z.rect[3]);
+      } else addPoints(z.d);
+    });
+    (st.marks || []).forEach((m) => {
+      if (m.d) addPoints(m.d);
+      if (m.x1 != null && m.y1 != null) add(m.x1, m.y1);
+      if (m.x2 != null && m.y2 != null) add(m.x2, m.y2);
+      if (m.x != null && m.y != null) {
+        add(m.x, m.y);
+        if (m.w != null && m.h != null) add(m.x + m.w, m.y + m.h);
+      }
+    });
+    if (st.los != null) xs.push(st.los);
+    if (st.fd != null) xs.push(st.fd);
+    if (!xs.length || !ys.length) return { ...target, w: Math.min(target.w, 46) };
+
+    const r = svg.getBoundingClientRect();
+    const aspect = r.height / Math.max(1, r.width) || 9 / 16;
+    const minX = Math.min(...xs), maxX = Math.max(...xs);
+    const minY = Math.min(...ys), maxY = Math.max(...ys);
+    const w = Math.max(28, maxX - minX + 10, (maxY - minY + 8) / aspect);
+    return { ...target, x: (minX + maxX) / 2, y: (minY + maxY) / 2, w };
+  }
+
   function camera(to, instant) {
     const from = { ...FD.camNow }, tgt = { ...FD.DEFAULTS.cam, ...to };
     const same = from.x === tgt.x && from.y === tgt.y && from.w === tgt.w;
@@ -1147,6 +1226,7 @@ window.FD = window.FD || {};
   function phoneCamera(cam, st) {
     const target = { ...FD.DEFAULTS.cam, ...cam };
     if (!matchMedia('(max-width:700px) and (orientation:portrait)').matches) return target;
+    if (FD.isPhoneFieldDiagram(st)) return phoneDiagramCamera(target, st);
 
     const routes = (st.routes || []).filter((r) => r.move && r.d && r.d.length);
     const ball = routes.find((r) => r.p === 'BALL' && (r.k === 'pass' || r.k === 'kick'));
@@ -1454,6 +1534,7 @@ window.FD = window.FD || {};
     stage.classList.toggle('frame-active', (st.ov || []).some((o) => o.type === 'frame'));
     stage.classList.toggle('bp', st.skin === 'bp');
     stage.classList.toggle('deep', !!st.deep);
+    stage.classList.toggle('diagram-phone', !!FD.isPhoneFieldDiagram(st));
     camera(phoneCamera(st.cam, st), instant);
     lines(st, instant);
     zones(st, instant);
@@ -1924,6 +2005,17 @@ window.FD = window.FD || {};
   const btn = (action, label, html) => `<button type="button" data-action="${action}" aria-label="${FD.esc(label)}" title="${FD.esc(label)}">${html}</button>`;
   const ACTIONS = {
     prev: () => FD.prev(), next: () => FD.next(), menu: () => openMenu(),
+    details: () => {
+      const stage = FD.$('#stage');
+      const open = stage.classList.toggle('diagram-details-open');
+      const button = FD.$('#touchNav [data-action="details"]');
+      if (button) {
+        const label = FD.T(open ? 'Hide slide details' : 'Show slide details');
+        button.setAttribute('aria-label', label);
+        button.title = label;
+        button.setAttribute('aria-pressed', String(open));
+      }
+    },
     mute: () => FD.toggleMute(), lang: () => FD.switchLanguage(),
   };
   function bindActions(root) {
@@ -1938,7 +2030,7 @@ window.FD = window.FD || {};
 
     const nav = FD.h('nav', { id: 'touchNav', class: 'touch-nav', dir: 'ltr', 'aria-label': FD.T('Touch navigation') });
     nav.innerHTML = `<div class="touch-progress" role="progressbar" aria-label="${FD.T('Progress')}" aria-valuemin="1" aria-valuemax="${FD.STEPS.length}"><i></i></div>
-      <div class="touch-actions">${btn('prev', FD.T('Previous slide'), '<span aria-hidden="true">‹</span>')}${btn('menu', FD.T('Open menu'), '<span aria-hidden="true">☰</span>')}<span class="touch-count"></span>${btn('mute', muteLabel(), muteIcon())}${langBtn}${btn('next', FD.T('Next slide'), '<span aria-hidden="true">›</span>')}</div>`;
+      <div class="touch-actions">${btn('prev', FD.T('Previous slide'), '<span aria-hidden="true">‹</span>')}${btn('menu', FD.T('Open menu'), '<span aria-hidden="true">☰</span>')}${btn('details', FD.T('Show slide details'), '<span aria-hidden="true">i</span>')}<span class="touch-count"></span>${btn('mute', muteLabel(), muteIcon())}${langBtn}${btn('next', FD.T('Next slide'), '<span aria-hidden="true">›</span>')}</div>`;
     bindActions(nav);
 
     const tools = FD.h('div', { id: 'deskTools', class: 'desk-tools', dir: 'ltr' });
@@ -1955,6 +2047,27 @@ window.FD = window.FD || {};
   FD.updateTouchProgress = (i) => {
     const st = FD.STEPS[i], bar = FD.$('#touchNav .touch-progress');
     if (!st || !bar) return;
+    const stage = FD.$('#stage');
+    const diagram = !!FD.isPhoneFieldDiagram?.(st);
+    if (stage.dataset.diagramStep !== st.id) {
+      stage.dataset.diagramStep = st.id;
+      stage.classList.remove('diagram-details-open');
+    }
+    stage.classList.toggle('diagram-phone', diagram);
+    const phoneTitle = FD.$('#phoneTitle');
+    if (phoneTitle) phoneTitle.textContent = st.title;
+    stage.classList.toggle('phone-title-on', diagram && !st.l3);
+    if (!diagram) stage.classList.remove('diagram-details-open');
+    const details = FD.$('#touchNav [data-action="details"]');
+    if (details) {
+      const available = !!FD.hasPhoneDiagramDetails?.(st);
+      const open = stage.classList.contains('diagram-details-open');
+      const label = FD.T(open ? 'Hide slide details' : 'Show slide details');
+      details.hidden = !available;
+      details.setAttribute('aria-label', label);
+      details.title = label;
+      details.setAttribute('aria-pressed', String(open));
+    }
     bar.firstElementChild.style.width = `${((i + 1) / FD.STEPS.length) * 100}%`;
     bar.setAttribute('aria-valuenow', i + 1);
     bar.setAttribute('aria-valuetext', `${st._ch.title}, ${FD.T('step {a}/{b}', { a: st._s + 1, b: st._ch.steps.length })}`);
@@ -6873,6 +6986,8 @@ FD.CH = []; FD.GLOSSARY = []; FD.I18N = {};
     'all keys': 'כל המקשים',
     'Previous slide': 'השקף הקודם',
     'Open menu': 'פתיחת התפריט',
+    'Show slide details': 'הצגת פרטי השקף',
+    'Hide slide details': 'הסתרת פרטי השקף',
     'Next slide': 'השקף הבא',
     'Switch language': 'החלפת שפה',
     'Presenter view': 'תצוגת מציג',
@@ -9109,20 +9224,20 @@ FD.CH = []; FD.GLOSSARY = []; FD.I18N = {};
     base: { bug: {} },
     steps: [
       {
-        title: 'שלוש קומות של הגנה',
+        title: 'שלוש שכבות של הגנה',
         bug: { reset: true, hs: 21, as: 17, q: '3RD', clk: '6:40', down: 2, dist: 7, poss: 'NYJ' },
         off: 'NYJ', dlbl: true, los: LOS, fd: 63, lbl: true, ball: { x: LOS, y: M },
         cam: CAMP,
         players: [...o12, ...d43], routes: [], zones: [],
         marks: [lvl('lv-dl', 67.4, 2.8, '#f87171', 'קו'), lvl('lv-lb', 63.9, 3.1, '#facc15', 'ליינבקרים'), lvl('lv-db', 53.5, 10.2, '#38bdf8', 'סקנדרי')],
-        ov: [{ id: 'lv', type: 'panel', pos: 'r', k: 'הפטריוטס בהגנה', t: 'שלוש קומות', num: true,
+        ov: [{ id: 'lv', type: 'panel', pos: 'r', k: 'הפטריוטס בהגנה', t: 'שלוש שכבות', num: true,
           items: ['**קו ההגנה**: לנצח בסנאפ, לסתום גאפים בריצה, ללחוץ על הקוורטרבק',
             '**ליינבקרים**: לקרוא ריצה או מסירה, לתקל, לכסות את האמצע הקצר, לבצע בליץ',
             '**הסקנדרי** (קורנרים + סייפטיז): לכסות תופסים, לעצור את הכדור העמוק, קו ההגנה האחרון'] }],
-        l3: { k: 'כדור NYJ · דאון שני ו-7', t: 'שלוש קומות של הגנה', s: 'קו · ליינבקרים · סקנדרי: 11 שחקנים, 3 תפקידים' },
+        l3: { k: 'כדור NYJ · דאון שני ו-7', t: 'שלוש שכבות של הגנה', s: 'קו · ליינבקרים · סקנדרי: 11 שחקנים, 3 תפקידים' },
         notes: {
           p: ['עכשיו הפטריוטס בהגנה. לג\'טס יש את הכדור על קו ה-40 שלהם, והם מתקדמים לכיוון האנד זון של הפטריוטס משמאל.',
-            'אחד עשר מגנים, תמיד (חוק 5-1-1: שתי קבוצות של 11). הם מסודרים בשלוש קומות, מקדימה לאחור.',
+            'אחד עשר מגנים, תמיד (חוק 5-1-1: שתי קבוצות של 11). הם מסודרים בשלוש שכבות, מקדימה לאחור.',
             'קו ההגנה: הגדולים, בעמידת פתיחה ממש מול הכדור. התפקיד שלהם הוא לשלוט בגאפים ולהגיע לקוורטרבק.',
             'ליינבקרים: כמה יארדים מהכדור. הם קוראים את המהלך, מתקלים רצים, מכסים מסירות קצרות, ולפעמים יוצאים לבליץ.',
             'סקנדרי (Secondary): קורנרבקים על התופסים החיצוניים, סייפטיז עמוק. הם עוצרים את המהלך הגדול.'],
