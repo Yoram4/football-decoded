@@ -118,7 +118,7 @@
 
     const hints = FD.h('div', { id: 'keyHints', class: 'key-hints', dir: 'ltr', 'aria-hidden': 'true' });
     const k = (key, label) => `<span><kbd>${key}</kbd>${FD.esc(FD.T(label))}</span>`;
-    hints.innerHTML = k('← →', 'navigate') + k('↑ ↓', 'chapter') + k('M', 'menu') + k('D', 'film room') + k('I', 'explain') + k('A', 'sound') + k('?', 'all keys');
+    hints.innerHTML = k('← →', 'navigate') + k('↑ ↓', 'chapter') + k('M', 'menu') + k('D', 'film room') + k('I', 'more info') + k('A', 'sound') + k('?', 'all keys');
 
     hud.append(nav, tools, hints);
     FD.updateTouchProgress(FD.idx);
@@ -197,7 +197,7 @@
         case 'a': case 'A': FD.toggleMute(); break;
         case 'v': case 'V': { const v = FD.$('.ov-video'); if (v) FD.videoPlay(v, v.querySelector('.rp-player').dataset.yt, JSON.parse(FD._ov.get(v.dataset.id).sig)); break; }
         case 'Escape': FD.$('#menu').classList.remove('on'); FD.closeGlossary && FD.closeGlossary(); FD.closeCard && FD.closeCard(); FD.closeExplanations && FD.closeExplanations(); if (FD.tele.on) FD.tele.toggle(); break;
-        case '?': FD.toast(FD.T('→ next · ← back · ↑↓ chapter · M menu · D film room · T draw · P pause · I explanations · R replay · N presenter · G glossary · A sound · F full')); break;
+        case '?': FD.toast(FD.T('→ next · ← back · ↑↓ chapter · M menu · D film room · T draw · P pause · I more info · R replay · N presenter · G glossary · A sound · F full')); break;
         default: return;
       }
     });
@@ -292,7 +292,7 @@
     initInput();
     FD.renderChrome();
     FD.goto(fromHash(), { instant: true });
-    if (!FD.store.get('fd-seen-help')) { setTimeout(() => FD.toast(FD.T('Press → to start · M menu · N presenter view · ? help')), 600); FD.store.set('fd-seen-help', '1'); }
+    if (!FD.store.get('fd-seen-help')) { setTimeout(() => FD.toast(FD.T('Press → to start · M menu · ? all keys')), 600); FD.store.set('fd-seen-help', '1'); }
   };
   addEventListener('DOMContentLoaded', () => FD.boot());
 })(window.FD);

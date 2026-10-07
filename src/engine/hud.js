@@ -23,7 +23,7 @@
   function renderExplanations(st) {
     let toggle = FD.$('#explainToggle'), panel = FD.$('#explainPanel');
     if (!toggle) {
-      toggle = FD.h('button', { id: 'explainToggle', type: 'button', 'aria-controls': 'explainPanel', 'aria-expanded': 'false', 'aria-label': FD.T('Open slide explanations'), title: FD.T('Open slide explanations'), 'aria-keyshortcuts': 'I' }, '?');
+      toggle = FD.h('button', { id: 'explainToggle', type: 'button', 'aria-controls': 'explainPanel', 'aria-expanded': 'false', 'aria-label': FD.T('Good to know: more about this slide'), title: FD.T('Good to know: more about this slide'), 'aria-keyshortcuts': 'I' }, '?');
       panel = FD.h('aside', { id: 'explainPanel', class: 'explain-panel', role: 'region', 'aria-labelledby': 'explainTitle', hidden: 'hidden' });
       FD.$('#hud').append(toggle, panel);
       toggle.addEventListener('click', (e) => { e.stopPropagation(); FD.toggleExplanations(); });
@@ -47,10 +47,10 @@
     const open = !panel.hidden;
     toggle.hidden = !available;
     toggle.setAttribute('aria-expanded', String(!!available && open));
-    panel.innerHTML = `<div class="explain-head"><h2 id="explainTitle">${FD.T('Slide explanation')}</h2><button class="explain-close" type="button" data-explain-close aria-label="${FD.T('Close slide explanations')}" title="${FD.T('Close slide explanations')}">×</button></div>
+    panel.innerHTML = `<div class="explain-head"><h2 id="explainTitle">${FD.T('Good to know')}</h2><button class="explain-close" type="button" data-explain-close aria-label="${FD.T('Close')}" title="${FD.T('Close')}">×</button></div>
       ${points.length ? `<ol>${points.map((p) => `<li>${FD.md(p)}</li>`).join('')}</ol>` : ''}
-      ${notes.a ? `<section class="explain-section"><h3>${FD.T('Analogy')}</h3><p>${FD.md(notes.a)}</p></section>` : ''}
-      ${notes.x ? `<section class="explain-section"><h3>${FD.T('If an expert asks…')}</h3><p>${FD.md(notes.x)}</p></section>` : ''}`;
+      ${notes.a ? `<section class="explain-section"><h3>${FD.T('Think of it like…')}</h3><p>${FD.md(notes.a)}</p></section>` : ''}
+      ${notes.x ? `<section class="explain-section"><h3>${FD.T('Going deeper')}</h3><p>${FD.md(notes.x)}</p></section>` : ''}`;
     panel.hidden = !available || !open;
     if (!available) toggle.setAttribute('aria-expanded', 'false');
   }

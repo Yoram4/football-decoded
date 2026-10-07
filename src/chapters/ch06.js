@@ -124,9 +124,9 @@
         players: ALL, w: 'cards', ov: [],
         l3: { k: 'Interactive', t: 'Click a player', s: 'Each one gets a broadcast player card' },
         notes: {
-          p: ['Interactive: click any circle or X to open that position\'s player card. Esc closes it.',
-            'Ask the audience: "Which one would you be?" Then click it.',
-            'Good ones to show: the center (he snaps AND calls protections), the nickel back, the safety.'],
+          p: ['Tap or click any circle or X to open that position\'s player card. Esc (or tapping elsewhere) closes it.',
+            'Which one would you be? Find him and open his card.',
+            'Worth a look: the center (he snaps AND calls protections), the nickel back, the safety.'],
           a: 'Pick your character.',
           x: 'Card sizes are typical modern averages; the range within each position is wide.',
         },

@@ -19,7 +19,7 @@
           '**The season**: 17 games, 14 playoff teams, one Super Bowl'] }],
         l3: null,
         notes: {
-          p: ['Thirty seconds to recap the whole thing.', 'If you remember only one thing: 4 downs to gain 10 yards. Everything else hangs on that.'],
+          p: ['The whole guide in one screen.', 'If you remember only one thing: 4 downs to gain 10 yards. Everything else hangs on that.'],
           a: 'You learned the board, the pieces and the moves.',
           x: 'Next level: watch the All-22 coaches film on NFL+ to see all 22 players on every snap.',
         },
@@ -33,7 +33,7 @@
         l3: { k: 'Remember this?', t: 'Now you can read it', s: '1st & 10, Cover 1 look, deep post vs one high safety' },
         sfx: [{ n: 'roar', at: 1700 }],
         notes: {
-          p: ['Same play as the cold open. An hour ago it was circles and lines.',
+          p: ['Same play as the cold open. At the start it was just circles and lines.',
             'Now: 1st & 10 at the Jets 48, 11 personnel, the defense shows one deep safety (Cover 1), the X receiver runs a post right at him… touchdown.'],
           a: 'Rereading the first page of a book after you finished it.',
           x: 'Post vs single-high: the QB holds the safety with his eyes before throwing.',
@@ -68,9 +68,9 @@
         ov: [{ id: 'qa', type: 'title', pos: 'c', k: 'Thank you', t: 'Questions?', s: 'M = chapters · G = glossary · ← → to revisit any play', menu: true }],
         bug: { hide: true },
         notes: {
-          p: ['Open the floor. Use M to jump to any chapter and G to search a term while answering.', 'Telestrator (T) is handy for drawing on a play during Q&A.'],
-          a: 'Office hours.',
-          x: 'Presenter view (N) shows notes, timer and the next step.',
+          p: ['Want to revisit something? M jumps to any chapter, G searches any term, and ← → replay any step.', 'Draw on any play yourself with the telestrator (T).'],
+          a: 'The guide stays open: come back any time.',
+          x: 'Watching a real game? Keep the glossary (G) open on your phone.',
         },
       },
     ],

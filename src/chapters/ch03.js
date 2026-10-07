@@ -213,10 +213,10 @@
         w: 'c17',
         l3: { k: 'Your turn', t: 'Ways to reach 17?', s: 'Combine 6, 1, 2 and 3' },
         notes: {
-          p: ['Quick audience challenge: how can a team end up with exactly 17 points?',
-            'Let people shout answers, then build them in the widget: 7 + 7 + 3 (two TDs with kicks + a field goal) is the classic.',
+          p: ['Try it yourself: how can a team end up with exactly 17 points?',
+            'Build your answers in the widget. The classic is 7 + 7 + 3 (two TDs with kicks + a field goal).',
             'Others: 6 + 6 + 2 + 3 (two TDs, one 2-point try, one FG); 3 + 3 + 3 + 3 + 3 + 2 (five FGs + a safety); 8 + 6 + 3.',
-            'Point out the trap: you can\'t score a "1" on its own. A 1-point try only exists right after a touchdown.'],
+            'The trap: you can\'t score a "1" on its own. A 1-point try only exists right after a touchdown.'],
           a: 'Like making change with coins of 6, 3 and 2, plus a 1 or 2 bonus coin that only comes with a 6.',
           x: 'Any total of 2 or more is reachable (2 = safety, 3 = FG, 4 = two safeties...). A team total of 1 would need the freak 1-point safety on the opponent\'s try (11-3-2-c). Rare combos are why fans track "scorigami" (never-before-seen final scores).',
         },

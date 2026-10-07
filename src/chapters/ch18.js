@@ -1,4 +1,4 @@
-/* Chapter 18 — Live Quiz: 5 game situations, audience votes, animated reveal */
+/* Chapter 18 — Quiz: 5 game situations, pick an answer, animated reveal */
 (function (FD) {
   const { F, R } = FD;
   const M = FD.MID;
@@ -21,7 +21,7 @@
           ['2nd & 6', '1st & 6', '2nd & 10', '3rd & 6'], 0,
           'The down goes up by one and the distance shrinks by the gain: 10 − 4 = 6. The yellow line does not move.',
           { routes: [q1run], los: 44, bug: { ...FD.BUG0, hs: 14, as: 10, q: '2ND', clk: '6:02', pc: 40, down: 2, dist: 6, poss: 'NE' }, players: [...q1o, ...q1d] }),
-        notes: { p: ['Have the audience shout or raise hands for A–D. Press 1–4 to lock the room\'s pick, then → to reveal.', 'Warm-up question: if they get this, they understand downs.'], a: 'Four tries, ten yards.', x: 'Line to gain stays fixed for the series (3-8-3).' },
+        notes: { p: ['Pick A–D (tap an answer or press 1–4), then → to reveal.', 'Warm-up question: get this one and you understand downs.'], a: 'Four tries, ten yards.', x: 'Line to gain stays fixed for the series (3-8-3).' },
       },
       {
         title: 'Q2: 4th-down call',
@@ -32,7 +32,7 @@
           ['Punt', 'Kick a 57-yard field goal', 'Go for it', 'Call a timeout and punt'], 2,
           'One yard is converted most of the time, and the field position is too good to punt but too far for a reliable kick. Go for it.',
           { marks: [{ id: 'go', type: 'text', x: 70, y: 12, t: 'GO FOR IT', size: 2.4, c: '#22c55e', cls: 'hd' }], routes: [R.abs(q2o, 'QB', [[71.2, M - 0.4]], { k: 'run', move: true, delay: 200, dur: 700 })] }),
-        notes: { p: ['This one splits rooms. Old-school answer: punt. Analytics answer: go.', 'Point back to the 4th-down heatmap from the Strategy chapter.'], a: 'A one-yard fee for a whole new set of downs.', x: '4th & 1 conversion rates sit around 70% league-wide in recent seasons; QB sneaks even higher.' },
+        notes: { p: ['This one splits fans. Old-school answer: punt. Analytics answer: go.', 'It\'s the same logic as the 4th-down heatmap in the Strategy chapter.'], a: 'A one-yard fee for a whole new set of downs.', x: '4th & 1 conversion rates sit around 70% league-wide in recent seasons; QB sneaks even higher.' },
       },
       {
         title: 'Q3: the last-play touchdown',
@@ -44,7 +44,7 @@
           ['Game over: it\'s a tie', 'The Patriots still get the try (kick) to win', 'Straight to overtime', 'The Jets get one last play'], 1,
           'A period ends only when the down is over, and the try is still played because it can change the result (Rule 4-8-2-c). Make the kick, win 21–20.',
           { routes: [{ id: 'k', k: 'kick', d: [[88, M], [120, M]], c: 'y', lift: 0.08, dur: 900 }], bug: { ...FD.BUG0, hs: 21, as: 20, q: 'FINAL', clk: '', msg: null } }),
-        notes: { p: ['Ties the Time chapter to the Scoring chapter.', 'If the try could NOT change the result (e.g., they were already winning), it\'s skipped today.'], a: 'The buzzer-beater still gets its free throw.', x: '4-8-2-c: try skipped only when a TD in the final down of the 4th makes the try irrelevant (not in sudden death).' },
+        notes: { p: ['This one combines the Time chapter and the Scoring chapter.', 'If the try could NOT change the result (e.g., they were already winning), it\'s skipped today.'], a: 'The buzzer-beater still gets its free throw.', x: '4-8-2-c: try skipped only when a TD in the final down of the 4th makes the try irrelevant (not in sudden death).' },
       },
       {
         title: 'Q4: kickoff into the end zone',
@@ -73,7 +73,7 @@
         w: null, players: [], routes: [], marks: [], los: null, fd: null, cam: { x: 60, y: M, w: 132 },
         bug: { flag: false, msg: null },
         ov: [{ id: 'res', type: 'big', pos: 'c', k: 'Score yourself', t: '5 / 5 = Sunday-ready', s: '3–4: solid fan · 0–2: rewatch the downs chapter 😉' }],
-        notes: { p: ['Quick show of hands: who got 5? 4? 3?', 'Everyone who got Q1 understands the single most important rule.'], a: 'You passed the driving test.', x: 'Want more? The glossary (G) links every term back to its chapter.' },
+        notes: { p: ['How many did you get: 5? 4? 3?', 'If you got Q1, you understand the single most important rule.'], a: 'You passed the driving test.', x: 'Want more? The glossary (G) links every term back to its chapter.' },
       },
     ],
   });

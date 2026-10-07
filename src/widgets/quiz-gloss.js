@@ -11,7 +11,7 @@
       const paint = () => {
         host.innerHTML = `<div class="qz-k">${T('Live quiz · question {n} of {of}', { n: w.n, of: w.of || 5 })}</div><div class="qz-q">${FD.md(w.q)}</div>
           <div class="qz-opts">${w.opts.map((o, i) => `<button class="qz-o ${pick === i ? 'pick' : ''} ${shown && i === w.ans ? 'right' : ''} ${shown && pick === i && i !== w.ans ? 'wrong' : ''}" data-i="${i}"><kbd>${i + 1}</kbd><b>${L[i]}</b><span>${FD.md(o)}</span></button>`).join('')}</div>
-          ${shown ? `<div class="qz-why"><b>${L[w.ans]} — </b>${FD.md(w.why)}</div>` : `<div class="qz-hint">${T('Audience votes · press 1–4 to lock a pick · → or Enter to reveal')}</div>`}`;
+          ${shown ? `<div class="qz-why"><b>${L[w.ans]} — </b>${FD.md(w.why)}</div>` : `<div class="qz-hint">${T('Tap an answer or press 1–4 · → or Enter to reveal')}</div>`}`;
         host.querySelectorAll('.qz-o').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); if (!shown) { pick = +b.dataset.i; paint(); } }));
       };
       const reveal = () => {

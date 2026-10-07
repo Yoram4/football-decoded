@@ -159,9 +159,9 @@
         title: 'Your turn: drive simulator',
         w: 'sim', ov: [], l3: null,
         notes: {
-          p: ['Interactive time. Keys: 1 run +4, 2 pass +15, 3 sack −7, 4 incomplete, 5 punt, 6 field goal, 0 reset.',
-            'Ask the audience to call the plays. Watch the blue line, the yellow line and the score bug update.',
-            'On 4th down a red banner asks: go for it, punt or kick? Try failing a 4th down to show the turnover on downs, and a long field goal to show the miss rule.',
+          p: ['Your turn to call the plays: tap a button or use the keys (1 run +4, 2 pass +15, 3 sack −7, 4 incomplete, 5 punt, 6 field goal, 0 reset).',
+            'After each play, watch the blue line, the yellow line and the score bug update.',
+            'On 4th down a red banner asks: go for it, punt or kick? Try failing on 4th down to see a turnover on downs, or a long field goal to see what a miss costs.',
             'Touchdowns count 7 here (assuming the extra point), field goals use realistic make rates by distance.'],
           a: 'You are the offensive coordinator now.',
           x: 'Missed FG: ball to the defense at the spot of the kick, or the 20 if kicked from inside the 20 (11-4-2). Punts into the end zone come out to the 20.',
