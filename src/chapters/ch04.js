@@ -216,7 +216,6 @@
         players: [], routes: [], marks: [],
         bug: { hide: true, flag: false },
         ov: [{ id: 'vid', type: 'video', pos: 'c', yt: 'miracle', k: 'Replay · Jan 14, 2018 · NFC Divisional', t: 'The Minneapolis Miracle', s: '0:10 left → walk-off 61-yard touchdown' }],
-        tags: ['VERIFY: try-skip rule adopted after this game'],
         l3: null,
         notes: {
           p: ['The most famous "play beats the clock" moment: Vikings vs Saints, January 2018 playoffs.',
@@ -224,7 +223,7 @@
             'At the time, the rules still required the try. The Saints had to come back out, and the Vikings simply took a knee.',
             'Today, if a touchdown on the final play of the 4th quarter means the try can\'t change the result, the try is skipped (4-8-2-c).'],
           a: 'A walk-off home run, football style.',
-          x: 'As I understand it, the skip-the-try rule was adopted shortly after this game; I\'d double-check the exact year before quoting it. The current text is 4-8-2-c.',
+          x: 'This game is the reason for the rule: in March 2018, two months later, the NFL dropped the try after a game-ending touchdown unless it could still change the result. The current text is 4-8-2-c.',
         },
       },
       {

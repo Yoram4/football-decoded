@@ -98,7 +98,6 @@
       {
         title: 'Home and away',
         ov: [{ id: 'mx', type: 'matrix', pos: 'c', hl: 'all' }],
-        tags: ['VERIFY: 2026 = NFC teams host 9 (AFC teams, incl. NE, host 8)'],
         l3: null,
         notes: {
           p: ['17 games is an odd number, so it can\'t split evenly: every team plays 8 or 9 home games.',
@@ -106,7 +105,7 @@
             'Plus: some home games are moved overseas as international games, so a team can "host" a game in London or Munich.',
             'That\'s the full formula: 17 opponents, known years in advance, only the dates and times are a surprise.'],
           a: 'Hosting the party 8 or 9 times; the 9th rotates between the two families.',
-          x: 'The 17th game is the one that decides 8 vs 9; it has been played at the AFC site in odd years (2021, 2023, 2025), so 2026 should be an NFC-host year.',
+          x: 'The 17th game decides 8 vs 9. AFC teams hosted it in 2021, 2023 and 2025, so in 2026 NFC teams host 9 and the Patriots host 8 (their 17th game is at an NFC West team).',
         },
       },
       {
@@ -119,13 +118,12 @@
           { logo: 'tv_prime', slot: 'Thursday Night Football', sub: 'Prime Video · 8:15 PM ET' },
           { txt: 'NETFLIX', slot: 'Special games', sub: 'e.g. Week 18 Saturday 1:00 PM ET' },
         ], foot: 'Late-season Saturdays also go to NFL Network (Wk 16) and NBC/Peacock (Wk 17)' }],
-        tags: ['VERIFY: which networks carry the 2026 Christmas Day games'],
         l3: null,
         notes: {
           p: ['Sunday afternoon is the heart of it: games at 1:00 PM and a late window at 4:05 or 4:25 PM Eastern.',
             'Those go to CBS and FOX. Roughly: CBS shows games where the road team is from the AFC, FOX when it\'s from the NFC. So most Patriots road games are on CBS.',
             'Then the prime-time games, one game, whole country watching: Sunday Night on NBC, Monday Night on ESPN/ABC, Thursday Night streaming on Amazon Prime Video.',
-            'Streaming is growing: Netflix has holiday and special games, including a Week 18 Saturday game this season.'],
+            'Streaming is growing: Netflix has special games, including a Week 18 Saturday game this season. On Christmas Day 2026, Netflix streams the afternoon doubleheader and FOX has the night game, its first ever on Christmas.'],
           a: 'Sunday afternoon is the buffet; prime time is the one big dinner everyone sits down for.',
           x: 'What you see on Sunday afternoon depends on your market: CBS/FOX affiliates show the local team first. NFL Sunday Ticket (YouTube) is how out-of-market fans watch everything.',
         },
@@ -198,14 +196,13 @@
       {
         title: 'The offseason: building a roster',
         ov: [{ id: 'cal', type: 'calendar', pos: 'c', hl: 1, foot: '**Hard salary cap** (same for all 32) · free agency in March · **7-round draft**: worst record picks first, Super Bowl winner last' }],
-        tags: ['VERIFY: 2026 trade deadline date (Tue after Week 9?)', 'VERIFY: 53 active · 47–48 dress on game day · 16-man practice squad'],
         l3: { k: 'Offseason', t: 'Cap, free agency, draft', s: 'Every team works under the same spending limit' },
         notes: {
           p: ['Salary cap: every team has the same hard spending limit for player salaries. You can\'t buy a championship; you have to manage it.',
             'Free agency starts in March: players whose contracts ended can sign anywhere. That\'s when teams spend their cap room.',
             'The Draft in April: 7 rounds of college players. The worst teams pick first; the Super Bowl winner picks last. It\'s the league\'s built-in way to help bad teams get better.',
             'During the season teams can still trade players until the trade deadline in early November.',
-            'Rosters: 53 players on the active roster, about 47–48 of them dress for each game, plus a practice squad of around 16.'],
+            'Rosters: 53 players on the active roster; 47 of them dress for each game (48 if eight are offensive linemen), plus a 16-man practice squad and one extra spot for an international player.'],
           a: 'Fantasy football with a fixed budget: everyone has the same money, the smart managers win.',
           x: 'Draft order: the 18 non-playoff teams pick 1–18 in reverse standings order; playoff teams pick by the round they lost in; Super Bowl loser 31st, winner 32nd (plus compensatory picks at the end of rounds 3–7).',
         },

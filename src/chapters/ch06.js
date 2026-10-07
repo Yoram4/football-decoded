@@ -26,7 +26,6 @@
           a: 'Less like soccer, more like a theater company: different casts for different scenes.',
           x: 'Roster: 53-man active list plus a practice squad (16, with an extra international-pathway spot). Game-day actives are 47, or 48 with 8 offensive linemen.',
         },
-        tags: ['VERIFY: game-day active count / practice squad size'],
       },
       {
         title: 'Offensive line',
