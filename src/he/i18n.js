@@ -36,8 +36,6 @@
     'all keys': 'כל המקשים',
     'Previous slide': 'השקף הקודם',
     'Open menu': 'פתיחת התפריט',
-    'Show slide details': 'הצגת פרטי השקף',
-    'Hide slide details': 'הסתרת פרטי השקף',
     'Next slide': 'השקף הבא',
     'Switch language': 'החלפת שפה',
     'Presenter view': 'תצוגת מציג',

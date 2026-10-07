@@ -89,7 +89,6 @@
       <g id="fdl" class="ln-fd"><line x1="0" y1="0" x2="0" y2="53.33" filter="url(#fglow)"/><text class="ln-lbl" x=".5" y="2.2">${FD.T('LINE TO GAIN')}</text></g>
       <g id="ballG"><ellipse rx=".55" ry=".32" class="ball"/><path d="M-.25 0h.5" class="lace"/></g>`;
     hud = FD.$('#hud'); ovLayer = FD.$('#ov'); wLayer = FD.$('#wl'); photoEl = FD.$('#photo');
-    hud.appendChild(FD.h('div', { id: 'phoneTitle', 'aria-hidden': 'true' }));
     FD._pl = new Map(); FD._rt = new Map(); FD._zn = new Map(); FD._mk = new Map(); FD._ov = new Map();
     FD.camNow = { ...FD.DEFAULTS.cam };
     setVB(FD.camNow);
@@ -111,8 +110,6 @@
   FD.isPhoneFieldDiagram = (st) => matchMedia('(max-width:700px) and (orientation:portrait)').matches &&
     (st.players || []).length >= 8 &&
     (['routes', 'zones', 'marks'].some((k) => (st[k] || []).length) || (st.ov || []).some((o) => PHONE_DETAILS_TYPES.has(o.type)));
-  FD.hasPhoneDiagramDetails = (st) => FD.isPhoneFieldDiagram(st) &&
-    (st.ov || []).some((o) => PHONE_DETAILS_TYPES.has(o.type));
 
   function phoneDiagramCamera(target, st) {
     const xs = [], ys = [];
@@ -471,23 +468,34 @@
 
   // ---------- full render ----------
   FD.render = function (st, opt = {}) {
-    const instant = !!opt.instant || FD.isReduced;    TL.finishAll();
+    const instant = !!opt.instant || FD.isReduced;
+    TL.finishAll();
     const prev = FD.cur || FD.clone(FD.DEFAULTS);
     const stage = FD.$('#stage');
+    const phoneDiagram = !!FD.isPhoneFieldDiagram(st);
     stage.classList.toggle('frame-active', (st.ov || []).some((o) => o.type === 'frame'));
     stage.classList.toggle('bp', st.skin === 'bp');
     stage.classList.toggle('deep', !!st.deep);
-    stage.classList.toggle('diagram-phone', !!FD.isPhoneFieldDiagram(st));
+    stage.classList.toggle('diagram-phone', phoneDiagram);
+    stage.classList.toggle('diagram-animating', phoneDiagram && !instant);
     camera(phoneCamera(st.cam, st), instant);
     lines(st, instant);
     zones(st, instant);
     routes(prev, st, instant);
     players(prev, st, instant);
     marks(st, instant);
+    const fieldMotionEnd = TL.items.reduce((end, item) => Math.max(end, item.t0 + item.dur), TL.now);
     photo(st, instant);
     FD.renderHUD(prev, st, instant);
     FD.renderOverlays(prev, st, instant);
     FD.mountWidget(prev, st);
+    if (phoneDiagram && !instant) {
+      const wait = Math.max(0, fieldMotionEnd - TL.now);
+      if (wait) TL.add(wait, 1, () => { if (FD.cur === st) stage.classList.remove('diagram-animating'); }, E.lin);
+      else stage.classList.remove('diagram-animating');
+    } else {
+      stage.classList.remove('diagram-animating');
+    }
     if (opt.forward && !instant && st.sfx) (Array.isArray(st.sfx) ? st.sfx : [st.sfx]).forEach((s) => {
       const o = typeof s === 'string' ? { n: s, at: 0 } : s;
       setTimeout(() => { if (FD.cur === st) FD.sfx(o.n); }, (o.at || 0) * FD.SPEED);
