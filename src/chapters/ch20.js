@@ -63,9 +63,9 @@
         },
       },
       {
-        title: 'Questions?',
+        title: 'Thank you',
         photo: { key: 'photo_gillette', dim: 0.6, over: true },
-        ov: [{ id: 'qa', type: 'title', pos: 'c', k: 'Thank you', t: 'Questions?', s: 'M = chapters · G = glossary · ← → to revisit any play', menu: true }],
+        ov: [{ id: 'qa', type: 'title', pos: 'c', k: 'Football, Decoded', t: 'Thanks for watching', s: 'M = chapters · G = glossary · ← → to revisit any play', menu: true }],
         bug: { hide: true },
         notes: {
           p: ['Want to revisit something? M jumps to any chapter, G searches any term, and ← → replay any step.', 'Draw on any play yourself with the telestrator (T).'],

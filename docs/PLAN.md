@@ -229,5 +229,5 @@
 - s02 **Recap: the cold-open drive** — 1st & 10, Cover 1 look, deep post vs one high safety
 - s03 **Foxborough**
 - s04 **Six banners**
-- s05 **Questions?**
+- s05 **Thank you**
 
