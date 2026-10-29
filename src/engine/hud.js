@@ -89,13 +89,15 @@
     if (l3.dataset.sig !== sig) {
       l3.dataset.sig = sig;
       const L = st.l3;
+      // On phone field diagrams the lower third stays put so it doesn't compete with the play.
+      const still = instant || FD.$('#stage').classList.contains('diagram-phone');
       const fill = () => {
         if (!L) { l3.className = 'l3 off'; l3.innerHTML = ''; return; }
         l3.innerHTML = `${L.k ? `<div class="k">${L.k}</div>` : ''}<div class="t">${L.t || ''}</div>${L.s ? `<div class="s">${L.s}</div>` : ''}`;
-        l3.className = 'l3' + (L.team === 'NYJ' ? ' nyj' : '') + (instant ? ' on' : '');
-        if (!instant) { void l3.offsetWidth; setTimeout(() => l3.classList.add('on'), 20); }
+        l3.className = 'l3' + (L.team === 'NYJ' ? ' nyj' : '') + (still ? ' on' : '');
+        if (!still) { void l3.offsetWidth; setTimeout(() => l3.classList.add('on'), 20); }
       };
-      if (!instant && l3.classList.contains('on')) { l3.classList.remove('on'); setTimeout(() => { if (l3.dataset.sig === sig) fill(); }, 220); }
+      if (!still && l3.classList.contains('on')) { l3.classList.remove('on'); setTimeout(() => { if (l3.dataset.sig === sig) fill(); }, 220); }
       else fill();
     }
 

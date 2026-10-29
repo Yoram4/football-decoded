@@ -170,6 +170,8 @@ body.preview .key-hints,body.preview .desk-tools{display:none}
 
 /* ---------- overlays ---------- */
 #ov,#wl{position:absolute;inset:0;z-index:12;pointer-events:none}
+#ov{transition:opacity .7s ease,visibility 0s}
+.play-running #ov{visibility:hidden;opacity:0;transition:none}
 #wl{z-index:14}
 .ov{position:absolute;pointer-events:auto;opacity:0;transition:opacity .35s ease,transform .4s cubic-bezier(.2,.8,.2,1)}
 .ov.in{opacity:1;transform:none!important}
@@ -759,13 +761,13 @@ body.explore #stage{position:fixed;inset:0 38vw 0 0}
 @media(max-width:700px) and (orientation:portrait){
   .diagram-phone.diagram-animating #ov,
   .diagram-phone.diagram-animating #wl,
-  .diagram-phone.diagram-animating #l3,
   .diagram-phone.diagram-animating #tags,
   .diagram-phone.diagram-animating #badge,
   .diagram-phone.diagram-animating #explainToggle,
   .diagram-phone.diagram-animating #explainPanel{
     visibility:hidden!important;opacity:0!important;pointer-events:none!important
   }
+  .diagram-phone #l3{transition:none}
 }
 
 </style>
@@ -1521,10 +1523,14 @@ window.FD = window.FD || {};
     camera(phoneCamera(st.cam, st), instant);
     lines(st, instant);
     zones(st, instant);
+    const playItems = TL.items.length;
     routes(prev, st, instant);
     players(prev, st, instant);
+    const playEnd = (st.routes || []).some((r) => r.move) ? TL.items.slice(playItems).reduce((end, item) => Math.max(end, item.t0 + item.dur), TL.now) : TL.now;
     marks(st, instant);
     const fieldMotionEnd = TL.items.reduce((end, item) => Math.max(end, item.t0 + item.dur), TL.now);
+    stage.classList.toggle('play-running', !instant && playEnd > TL.now);
+    if (!instant && playEnd > TL.now) TL.add(playEnd - TL.now, 1, () => { if (FD.cur === st) stage.classList.remove('play-running'); }, E.lin);
     photo(st, instant);
     FD.renderHUD(prev, st, instant);
     FD.renderOverlays(prev, st, instant);
@@ -1648,13 +1654,15 @@ window.FD = window.FD || {};
     if (l3.dataset.sig !== sig) {
       l3.dataset.sig = sig;
       const L = st.l3;
+      // On phone field diagrams the lower third stays put so it doesn't compete with the play.
+      const still = instant || FD.$('#stage').classList.contains('diagram-phone');
       const fill = () => {
         if (!L) { l3.className = 'l3 off'; l3.innerHTML = ''; return; }
         l3.innerHTML = `${L.k ? `<div class="k">${L.k}</div>` : ''}<div class="t">${L.t || ''}</div>${L.s ? `<div class="s">${L.s}</div>` : ''}`;
-        l3.className = 'l3' + (L.team === 'NYJ' ? ' nyj' : '') + (instant ? ' on' : '');
-        if (!instant) { void l3.offsetWidth; setTimeout(() => l3.classList.add('on'), 20); }
+        l3.className = 'l3' + (L.team === 'NYJ' ? ' nyj' : '') + (still ? ' on' : '');
+        if (!still) { void l3.offsetWidth; setTimeout(() => l3.classList.add('on'), 20); }
       };
-      if (!instant && l3.classList.contains('on')) { l3.classList.remove('on'); setTimeout(() => { if (l3.dataset.sig === sig) fill(); }, 220); }
+      if (!still && l3.classList.contains('on')) { l3.classList.remove('on'); setTimeout(() => { if (l3.dataset.sig === sig) fill(); }, 220); }
       else fill();
     }
 

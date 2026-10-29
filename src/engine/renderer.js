@@ -481,10 +481,14 @@
     camera(phoneCamera(st.cam, st), instant);
     lines(st, instant);
     zones(st, instant);
+    const playItems = TL.items.length;
     routes(prev, st, instant);
     players(prev, st, instant);
+    const playEnd = (st.routes || []).some((r) => r.move) ? TL.items.slice(playItems).reduce((end, item) => Math.max(end, item.t0 + item.dur), TL.now) : TL.now;
     marks(st, instant);
     const fieldMotionEnd = TL.items.reduce((end, item) => Math.max(end, item.t0 + item.dur), TL.now);
+    stage.classList.toggle('play-running', !instant && playEnd > TL.now);
+    if (!instant && playEnd > TL.now) TL.add(playEnd - TL.now, 1, () => { if (FD.cur === st) stage.classList.remove('play-running'); }, E.lin);
     photo(st, instant);
     FD.renderHUD(prev, st, instant);
     FD.renderOverlays(prev, st, instant);

@@ -160,6 +160,8 @@ body.preview .key-hints,body.preview .desk-tools{display:none}
 
 /* ---------- overlays ---------- */
 #ov,#wl{position:absolute;inset:0;z-index:12;pointer-events:none}
+#ov{transition:opacity .7s ease,visibility 0s}
+.play-running #ov{visibility:hidden;opacity:0;transition:none}
 #wl{z-index:14}
 .ov{position:absolute;pointer-events:auto;opacity:0;transition:opacity .35s ease,transform .4s cubic-bezier(.2,.8,.2,1)}
 .ov.in{opacity:1;transform:none!important}
@@ -749,11 +751,11 @@ body.explore #stage{position:fixed;inset:0 38vw 0 0}
 @media(max-width:700px) and (orientation:portrait){
   .diagram-phone.diagram-animating #ov,
   .diagram-phone.diagram-animating #wl,
-  .diagram-phone.diagram-animating #l3,
   .diagram-phone.diagram-animating #tags,
   .diagram-phone.diagram-animating #badge,
   .diagram-phone.diagram-animating #explainToggle,
   .diagram-phone.diagram-animating #explainPanel{
     visibility:hidden!important;opacity:0!important;pointer-events:none!important
   }
+  .diagram-phone #l3{transition:none}
 }
