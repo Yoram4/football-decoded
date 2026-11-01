@@ -18,7 +18,6 @@
       players: [...ku, ...blockUnit(los), F.ball(los - 7, M)],
       routes: [
         { id: 'snap', k: 'pass', d: [[los, M], [los - 7, M]], delay: 0, dur: 280, lift: 0, arrow: false },
-        R.abs(ku, 'K', [[los - 7.6, M - 0.6]], { move: true, delay: 300, dur: 350 }),
         { id: 'kick', p: 'BALL', k: 'kick', d: [[los - 7, M], [120, M]], move: true, delay: 650, dur: 1100, lift: 0.08 },
       ],
     };
@@ -38,6 +37,7 @@
   const o4 = F.off(108, { wide: 11 }), d4 = F.def(108, { front: 'nickel', cov: '0', wide: 11 });
   const slant4 = R.make(o4, 'X', 'slant', { move: true, c: 'r', delay: 300, dur: 900 });
   const qb4 = F.get(o4, 'QB'), end4 = slant4.d[slant4.d.length - 1];
+  const throw4 = [qb4.x - 1.2, qb4.y];
 
   // Step 5: field goal, LOS at the NYJ 20 (x 90), hold at x 83
   const k5 = kickPlay(90);
@@ -56,7 +56,7 @@
 
   FD.CH.push({
     title: 'המטרה והניקוד', sub: 'טאצ\'דאון, נקודה נוספת, פילד גול, סייפטי',
-    base: { cam: { x: 60, y: 26.67, w: 132 } },
+    base: { cam: { x: 60, y: 26.67, w: 132 }, motion: 'diagram' },
     steps: [
       {
         title: 'המטרה',
@@ -82,7 +82,7 @@
         title: 'טאצ\'דאון: 6 נקודות',
         cam: CAM_RZ, los: 102, fd: null, lbl: false, ball: false,
         players: [...o2, ...d2],
-        routes: [run2, ...R.blocks(o2, [...R.OL, 'TE', 'TE2'], 1.4, 1)],
+        routes: [run2],
         marks: [{ id: 'gl', type: 'line', x1: 110, y1: 10, x2: 110, y2: 43, c: 'y', w: 0.45 }],
         bug: { q: '1ST', clk: '9:47', down: 1, dist: 'GOAL', hs: 6, msg: 'TOUCHDOWN' },
         ov: [{ id: 'sg1', type: 'signal', pos: 'l', sig: 1, name: 'טאצ\'דאון', desc: 'הכדור חוצה את מישור קו הגול כשהוא בידי שחקן', extra: '6 נקודות' }],
@@ -119,9 +119,9 @@
       {
         title: 'או ללכת על 2',
         cam: CAM_RZ, los: 108, fd: null, lbl: false, ball: false,
-        players: [...o4, ...d4, F.ball(qb4.x, qb4.y)],
-        routes: [slant4, R.make(o4, 'Z', 'out5'), R.make(o4, 'H', 'in5'), R.make(o4, 'TE', 'flat'), ...R.blocks(o4, R.OL, 0.6),
-          { id: 'bf4', p: 'BALL', k: 'pass', d: [[qb4.x, qb4.y], end4], move: true, delay: 900, dur: 450 }],
+        players: [...o4, ...d4, F.ball(...throw4)],
+        routes: [slant4, R.abs(o4, 'QB', [throw4], { move: true, dur: 350 }),
+          { id: 'bf4', p: 'BALL', k: 'pass', d: [throw4, end4], move: true, delay: 900, dur: 450 }],
         marks: [{ id: 'two-t', type: 'text', x: 106, y: 13.6, t: 'סנאפ מה-2', size: 1.4, c: 'y', anchor: 'end' }],
         bug: { q: '2ND', clk: '11:20', hs: 15, msg: '2-POINT TRY GOOD' },
         tags: ['מכללות: ניסיון ה-2 נקודות מתחיל מה-3'],
@@ -161,7 +161,6 @@
         routes: [
           R.abs(o6, 'RB', [[7, M + 2.5], [8.6, M + 4.8]], { k: 'run', move: true, curve: true, delay: 350, dur: 900 }),
           R.abs(d6, 'DE2', [[11.5, M + 6.4], [9.4, M + 5.2]], { move: true, c: 'r', delay: 300, dur: 1000 }),
-          ...R.blocks(o6, R.OL, 0.8, 0.5),
         ],
         marks: [
           { id: 'sf-ez', type: 'rect', x: 0, y: 0, w: 10, h: 53.33, c: 'r', op: 0.14, stroke: false },

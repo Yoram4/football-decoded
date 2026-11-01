@@ -8,7 +8,7 @@ const W = ['c17', 'heat', 'sim', 'cards', 'quiz', 'gloss'];
 const SIGS = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 16, 17, 19, 20, 21, 22, 23, 26, 32, 33];
 const ASSETS = 'nfl ne ne_png ne_helmet ne_endzone ne_endzone_ko ne_wordmark pat nyj nyj_helmet nyj_wordmark nyj_ko buf mia lombardi tv_cbs tv_cbs_eye tv_fox_sunday tv_nfl_fox tv_nbc tv_snf tv_espn tv_prime photo_gillette photo_gillette_fw photo_gillette_fw2 photo_banners photo_broadcast'.split(' ');
 const SFX = ['whistle', 'roar', 'cheer', 'hit', 'hit2', 'huddle'];
-const KEYS = 'id title cam los fd ball lbl off dlbl players routes zones marks bug l3 tags ov photo w sfx auto deep notes skin'.split(' ');
+const KEYS = 'id title cam los fd ball lbl off dlbl players routes zones marks bug l3 tags ov photo w sfx auto deep notes skin motion'.split(' ');
 
 let bad = 0;
 const err = (f, s, m) => { bad++; console.log(`  ✗ ${f} step ${s}: ${m}`); };

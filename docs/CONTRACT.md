@@ -36,6 +36,7 @@ Inheritance: keys you omit are inherited from the previous step **in the same ch
 | `ball` | `{x,y}` football glyph (default: on the LOS at mid). `ball:false` hides |
 | `off` | which team is on offense: `'NE'` (default) or `'NYJ'` — offense draws as O circles, defense as X |
 | `dlbl` | `true` = print position labels under defenders |
+| `motion` | `'diagram'` = only explicitly marked movement routes animate; all other players appear in position immediately, without formation transitions or inferred blocking/pursuit. Inherits within the chapter; omit for live-play behavior. |
 | `players` | array of `{id, t:'NE'|'NYJ', pos, x, y, lbl?, hl?, dim?, shape?:'O'|'X'|'ref'|'ball'}` — use `F.off`/`F.def` |
 | `routes` | array of route objects — use `R.make`/`R.abs`/`R.blocks`/`R.pass`. Route `{id, p?, k, d:[[x,y]...], c?, move?, delay?, dur?, lbl?, curve?, dash?, lift?}`. `k`: `route` (white), `run` (yellow), `block` (T-end), `pass`/`kick` (dashed arc), `motion` (dashed blue), `zone`. `c`: `'r'` red key route, `'y'`,`'b'`,`'g'`,`'w'`,`'o'` or hex. `move:true` + `p` = that player runs along the path (its final position = path end). |
 | `zones` | coverage zones `{id, ell:[cx,cy,rx,ry] | rect:[x,y,w,h] | d:[[x,y]..], c, lbl, op}` |

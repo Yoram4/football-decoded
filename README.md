@@ -15,8 +15,11 @@ This regenerates the root `index.html`. `python build.py --lang en` and `python 
 ## Validate
 
 ```sh
+node tests/check_play_motion.js
 node tests/check_chapter.js src/chapters/ch*.js src/he/chapters/ch*.js
 ```
+
+Live plays share one movement timeline for blocking, ball carriers, and defensive reactions. Assignment-only diagrams stay static; authored paths and reaction delays take precedence over fallback run pursuit. The scoring chapter uses `motion: 'diagram'`: only the scoring demonstration moves, and stationary players appear in place immediately.
 
 The GitHub Actions workflow runs the chapter checks and verifies that the generated `index.html` is up to date.
 

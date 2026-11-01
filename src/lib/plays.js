@@ -106,4 +106,50 @@
   R.pass = (from, to, o = {}) => ({ id: o.id || 'pass', k: 'pass', d: [from, to], delay: o.delay ?? 900, dur: o.dur ?? 550, ...o });
   // the ball as a moving "player" so it can travel along a pass/kick path
   F.ball = (x, y, id = 'BALL') => ({ id, t: 'BALL', pos: '', x, y, shape: 'ball', lbl: '' });
+
+  FD.playRoutes = function (st, prev = {}) {
+    const routes = (st.routes || []).filter((r) => r.move && r.p);
+    if (st.motion === 'diagram') return routes;
+    const live = routes.some((r) => r.k !== 'motion' && r.k !== 'block');
+    if (!live) return routes;
+    const players = st.players || [], previous = prev.players || [];
+    const moving = new Set(routes.map((r) => r.p));
+    (st.routes || []).forEach((r) => {
+      const player = players.find((p) => p.id === r.p);
+      if (r.k !== 'block' || !player || moving.has(r.p)) return;
+      routes.push({ ...r, move: true, d: [[player.x, player.y], ...r.d], delay: r.delay ?? 0, dur: r.dur ?? 600 });
+      moving.add(r.p);
+    });
+    players.forEach((player) => {
+      const start = previous.find((p) => p.id === player.id);
+      if (!start || player.delay == null || moving.has(player.id) || player.t === st.off || player.t === 'BALL') return;
+      if (Math.hypot(start.x - player.x, start.y - player.y) < 0.05) return;
+      routes.push({ id: `react-${player.id}`, p: player.id, k: 'route', move: true,
+        d: [[start.x, start.y], [player.x, player.y]], delay: player.delay ?? 150, dur: player.dur ?? 900 });
+      moving.add(player.id);
+    });
+    const carrier = routes.find((r) => r.k === 'run' && players.some((p) => p.id === r.p && p.t === st.off));
+    if (carrier) {
+      const finish = carrier.d[carrier.d.length - 1];
+      const available = routes.filter((r) => r.k === 'block' && players.some((p) => p.id === r.p && p.t === st.off));
+      players.filter((p) => p.t !== st.off && /^(DE|DT|NT|OLB|ILB|LB|S|CB|NB|DB)$/.test(p.pos)).forEach((player) => {
+        if (moving.has(player.id)) return;
+        const front = /^(DE|DT|NT|OLB)$/.test(player.pos);
+        let end, delay = 200, dur = (carrier.delay ?? 0) + (carrier.dur ?? 1400) - delay;
+        if (front && available.length) {
+          const nearest = available.reduce((best, route) => Math.abs(route.d.at(-1)[1] - player.y) < Math.abs(best.d.at(-1)[1] - player.y) ? route : best);
+          available.splice(available.indexOf(nearest), 1);
+          const contact = nearest.d.at(-1), dir = st.off === 'NE' ? 1 : -1;
+          end = [contact[0] + dir * 1.7, contact[1]];
+          delay = 0; dur = nearest.dur ?? 600;
+        } else {
+          const close = /^(ILB|LB)$/.test(player.pos) ? 0.85 : 0.55;
+          end = [player.x + (finish[0] - player.x) * close, player.y + (finish[1] - player.y) * close];
+        }
+        routes.push({ id: `pursue-${player.id}`, p: player.id, k: 'route', move: true,
+          d: [[player.x, player.y], end], delay, dur: Math.max(450, dur) });
+      });
+    }
+    return routes;
+  };
 })(window.FD);

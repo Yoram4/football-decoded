@@ -12,7 +12,7 @@
     players: [], routes: [], zones: [], marks: [], ov: [],
     l3: null, tags: [], photo: null, w: null,
   };
-  const NOINHERIT = ['id', 'title', 'sfx', 'notes', 'deep', 'w', 'skin', 'auto', 'ov', 'photo', 'tags'];
+  const NOINHERIT = ['id', 'title', 'sfx', 'notes', 'deep', 'w', 'skin', 'auto', 'ov', 'photo', 'tags', '_moveRoutes'];
   FD.BUG0 = { hs: 0, as: 0, q: '1ST', clk: '15:00', pc: null, down: null, dist: null, poss: 'NE', toH: 3, toA: 3, hide: false, msg: null, flag: false, pcRun: false, clkRun: false };
 
   // ---------- resolve chapters -> flat step list ----------
@@ -43,6 +43,7 @@
         st.notes = raw.notes || { p: [] };
         st.title = raw.title || (raw.l3 && raw.l3.t) || ch.title;
         st._c = ci; st._s = si; st._ch = ch;
+        st._moveRoutes = FD.playRoutes(st, prev);
         out.push(st);
         prev = st;
       });
@@ -330,8 +331,14 @@
   }
   function players(prev, st, instant) {
     const moves = new Map();
-    st.routes.forEach((r) => r.move && r.p && moves.set(r.p, r));
-    const prevRouteSig = new Map((prev.routes || []).map((r) => [r.id, JSON.stringify(r)]));
+    (st._moveRoutes || FD.playRoutes(st, prev)).forEach((r) => moves.set(r.p, r));
+    const prevRouteSig = new Map((prev._moveRoutes || prev.routes || []).map((r) => [r.id, JSON.stringify(r)]));
+    const diagram = st.motion === 'diagram';
+    const reset = instant || diagram ? 0 : Math.max(0, ...st.players.map((p) => {
+      const move = moves.get(p.id), current = FD._pl.get(p.id);
+      if (!move || !current || prevRouteSig.get(move.id) === JSON.stringify(move)) return 0;
+      return Math.hypot(current.x - move.d[0][0], current.y - move.d[0][1]) > 0.05 ? 450 : 0;
+    }));
     const keep = new Set();
     st.players.forEach((p) => {
       keep.add(p.id);
@@ -345,20 +352,21 @@
         o = { g, x: p.x, y: p.y, shapeKey: p.shape || (p.t === st.off ? 'O' : 'X') };
         FD._pl.set(p.id, o);
         g.setAttribute('transform', `translate(${p.x} ${p.y})`);
-        if (!instant) { g.style.opacity = 0; TL.add(p.delay || 0, 300, (k) => (g.style.opacity = k), E.lin); }
+        if (!instant && !diagram) { g.style.opacity = 0; TL.add(p.delay || 0, 300, (k) => (g.style.opacity = k), E.lin); }
       }
       decorate(o.g, p, st);
       const set = (x, y) => { o.x = x; o.y = y; o.g.setAttribute('transform', `translate(${x.toFixed(3)} ${y.toFixed(3)})`); };
       const animateMove = mv && !instant && prevRouteSig.get(mv.id) !== JSON.stringify(mv);
-      if (instant) { set(end[0], end[1]); return; }
+      if (instant || (diagram && !animateMove)) { set(end[0], end[1]); return; }
       if (animateMove) {
         const fx = o.x, fy = o.y, pts = samplePath(mv);
-        const pre = Math.hypot(fx - p.x, fy - p.y) > 0.05 ? 450 : 0;
-        if (pre) TL.add(0, pre, (k) => set(FD.lerp(fx, p.x, k), FD.lerp(fy, p.y, k)));
-        const delay = mv.k === 'run' && p.t === st.off ? pre : Math.max(pre, (mv.delay ?? 0) * FD.SPEED);
+        const start = mv.d[0];
+        if (reset) TL.add(0, reset, (k) => set(FD.lerp(fx, start[0], k), FD.lerp(fy, start[1], k)));
+        else set(start[0], start[1]);
+        const delay = reset + (mv.delay ?? 0) * FD.SPEED;
         const L = pts.length - 1;
         const dur = (mv.dur ?? Math.max(450, Math.min(1400, mvLen(pts) * 45))) * FD.SPEED;
-        TL.add(delay, dur, (k) => { const f = k * L, i = Math.min(L - 1, Math.floor(f)), r = f - i; set(FD.lerp(pts[i][0], pts[i + 1][0], r), FD.lerp(pts[i][1], pts[i + 1][1], r)); }, mv.k === 'pass' || mv.k === 'kick' ? E.lin : E.inOut);
+        TL.add(delay, dur, (k) => { const f = k * L, i = Math.min(L - 1, Math.floor(f)), r = f - i; set(FD.lerp(pts[i][0], pts[i + 1][0], r), FD.lerp(pts[i][1], pts[i + 1][1], r)); }, mv.k === 'motion' ? E.inOut : E.lin);
         return;
       }
       if (Math.hypot(o.x - end[0], o.y - end[1]) > 0.01) {
@@ -366,7 +374,7 @@
         TL.add(p.delay || 0, p.dur || 700, (k) => set(FD.lerp(fx, end[0], k), FD.lerp(fy, end[1], k)));
       }
     });
-    for (const [id, o] of FD._pl) if (!keep.has(id)) { FD._pl.delete(id); fadeOut(o.g, instant); }
+    for (const [id, o] of FD._pl) if (!keep.has(id)) { FD._pl.delete(id); fadeOut(o.g, instant || diagram); }
   }
   function mvLen(pts) { let L = 0; for (let i = 1; i < pts.length; i++) L += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); return L; }
 

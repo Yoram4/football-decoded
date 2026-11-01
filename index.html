@@ -1054,7 +1054,7 @@ window.FD = window.FD || {};
     players: [], routes: [], zones: [], marks: [], ov: [],
     l3: null, tags: [], photo: null, w: null,
   };
-  const NOINHERIT = ['id', 'title', 'sfx', 'notes', 'deep', 'w', 'skin', 'auto', 'ov', 'photo', 'tags'];
+  const NOINHERIT = ['id', 'title', 'sfx', 'notes', 'deep', 'w', 'skin', 'auto', 'ov', 'photo', 'tags', '_moveRoutes'];
   FD.BUG0 = { hs: 0, as: 0, q: '1ST', clk: '15:00', pc: null, down: null, dist: null, poss: 'NE', toH: 3, toA: 3, hide: false, msg: null, flag: false, pcRun: false, clkRun: false };
 
   // ---------- resolve chapters -> flat step list ----------
@@ -1085,6 +1085,7 @@ window.FD = window.FD || {};
         st.notes = raw.notes || { p: [] };
         st.title = raw.title || (raw.l3 && raw.l3.t) || ch.title;
         st._c = ci; st._s = si; st._ch = ch;
+        st._moveRoutes = FD.playRoutes(st, prev);
         out.push(st);
         prev = st;
       });
@@ -1372,8 +1373,14 @@ window.FD = window.FD || {};
   }
   function players(prev, st, instant) {
     const moves = new Map();
-    st.routes.forEach((r) => r.move && r.p && moves.set(r.p, r));
-    const prevRouteSig = new Map((prev.routes || []).map((r) => [r.id, JSON.stringify(r)]));
+    (st._moveRoutes || FD.playRoutes(st, prev)).forEach((r) => moves.set(r.p, r));
+    const prevRouteSig = new Map((prev._moveRoutes || prev.routes || []).map((r) => [r.id, JSON.stringify(r)]));
+    const diagram = st.motion === 'diagram';
+    const reset = instant || diagram ? 0 : Math.max(0, ...st.players.map((p) => {
+      const move = moves.get(p.id), current = FD._pl.get(p.id);
+      if (!move || !current || prevRouteSig.get(move.id) === JSON.stringify(move)) return 0;
+      return Math.hypot(current.x - move.d[0][0], current.y - move.d[0][1]) > 0.05 ? 450 : 0;
+    }));
     const keep = new Set();
     st.players.forEach((p) => {
       keep.add(p.id);
@@ -1387,20 +1394,21 @@ window.FD = window.FD || {};
         o = { g, x: p.x, y: p.y, shapeKey: p.shape || (p.t === st.off ? 'O' : 'X') };
         FD._pl.set(p.id, o);
         g.setAttribute('transform', `translate(${p.x} ${p.y})`);
-        if (!instant) { g.style.opacity = 0; TL.add(p.delay || 0, 300, (k) => (g.style.opacity = k), E.lin); }
+        if (!instant && !diagram) { g.style.opacity = 0; TL.add(p.delay || 0, 300, (k) => (g.style.opacity = k), E.lin); }
       }
       decorate(o.g, p, st);
       const set = (x, y) => { o.x = x; o.y = y; o.g.setAttribute('transform', `translate(${x.toFixed(3)} ${y.toFixed(3)})`); };
       const animateMove = mv && !instant && prevRouteSig.get(mv.id) !== JSON.stringify(mv);
-      if (instant) { set(end[0], end[1]); return; }
+      if (instant || (diagram && !animateMove)) { set(end[0], end[1]); return; }
       if (animateMove) {
         const fx = o.x, fy = o.y, pts = samplePath(mv);
-        const pre = Math.hypot(fx - p.x, fy - p.y) > 0.05 ? 450 : 0;
-        if (pre) TL.add(0, pre, (k) => set(FD.lerp(fx, p.x, k), FD.lerp(fy, p.y, k)));
-        const delay = mv.k === 'run' && p.t === st.off ? pre : Math.max(pre, (mv.delay ?? 0) * FD.SPEED);
+        const start = mv.d[0];
+        if (reset) TL.add(0, reset, (k) => set(FD.lerp(fx, start[0], k), FD.lerp(fy, start[1], k)));
+        else set(start[0], start[1]);
+        const delay = reset + (mv.delay ?? 0) * FD.SPEED;
         const L = pts.length - 1;
         const dur = (mv.dur ?? Math.max(450, Math.min(1400, mvLen(pts) * 45))) * FD.SPEED;
-        TL.add(delay, dur, (k) => { const f = k * L, i = Math.min(L - 1, Math.floor(f)), r = f - i; set(FD.lerp(pts[i][0], pts[i + 1][0], r), FD.lerp(pts[i][1], pts[i + 1][1], r)); }, mv.k === 'pass' || mv.k === 'kick' ? E.lin : E.inOut);
+        TL.add(delay, dur, (k) => { const f = k * L, i = Math.min(L - 1, Math.floor(f)), r = f - i; set(FD.lerp(pts[i][0], pts[i + 1][0], r), FD.lerp(pts[i][1], pts[i + 1][1], r)); }, mv.k === 'motion' ? E.inOut : E.lin);
         return;
       }
       if (Math.hypot(o.x - end[0], o.y - end[1]) > 0.01) {
@@ -1408,7 +1416,7 @@ window.FD = window.FD || {};
         TL.add(p.delay || 0, p.dur || 700, (k) => set(FD.lerp(fx, end[0], k), FD.lerp(fy, end[1], k)));
       }
     });
-    for (const [id, o] of FD._pl) if (!keep.has(id)) { FD._pl.delete(id); fadeOut(o.g, instant); }
+    for (const [id, o] of FD._pl) if (!keep.has(id)) { FD._pl.delete(id); fadeOut(o.g, instant || diagram); }
   }
   function mvLen(pts) { let L = 0; for (let i = 1; i < pts.length; i++) L += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); return L; }
 
@@ -2318,6 +2326,52 @@ window.FD = window.FD || {};
   R.pass = (from, to, o = {}) => ({ id: o.id || 'pass', k: 'pass', d: [from, to], delay: o.delay ?? 900, dur: o.dur ?? 550, ...o });
   // the ball as a moving "player" so it can travel along a pass/kick path
   F.ball = (x, y, id = 'BALL') => ({ id, t: 'BALL', pos: '', x, y, shape: 'ball', lbl: '' });
+
+  FD.playRoutes = function (st, prev = {}) {
+    const routes = (st.routes || []).filter((r) => r.move && r.p);
+    if (st.motion === 'diagram') return routes;
+    const live = routes.some((r) => r.k !== 'motion' && r.k !== 'block');
+    if (!live) return routes;
+    const players = st.players || [], previous = prev.players || [];
+    const moving = new Set(routes.map((r) => r.p));
+    (st.routes || []).forEach((r) => {
+      const player = players.find((p) => p.id === r.p);
+      if (r.k !== 'block' || !player || moving.has(r.p)) return;
+      routes.push({ ...r, move: true, d: [[player.x, player.y], ...r.d], delay: r.delay ?? 0, dur: r.dur ?? 600 });
+      moving.add(r.p);
+    });
+    players.forEach((player) => {
+      const start = previous.find((p) => p.id === player.id);
+      if (!start || player.delay == null || moving.has(player.id) || player.t === st.off || player.t === 'BALL') return;
+      if (Math.hypot(start.x - player.x, start.y - player.y) < 0.05) return;
+      routes.push({ id: `react-${player.id}`, p: player.id, k: 'route', move: true,
+        d: [[start.x, start.y], [player.x, player.y]], delay: player.delay ?? 150, dur: player.dur ?? 900 });
+      moving.add(player.id);
+    });
+    const carrier = routes.find((r) => r.k === 'run' && players.some((p) => p.id === r.p && p.t === st.off));
+    if (carrier) {
+      const finish = carrier.d[carrier.d.length - 1];
+      const available = routes.filter((r) => r.k === 'block' && players.some((p) => p.id === r.p && p.t === st.off));
+      players.filter((p) => p.t !== st.off && /^(DE|DT|NT|OLB|ILB|LB|S|CB|NB|DB)$/.test(p.pos)).forEach((player) => {
+        if (moving.has(player.id)) return;
+        const front = /^(DE|DT|NT|OLB)$/.test(player.pos);
+        let end, delay = 200, dur = (carrier.delay ?? 0) + (carrier.dur ?? 1400) - delay;
+        if (front && available.length) {
+          const nearest = available.reduce((best, route) => Math.abs(route.d.at(-1)[1] - player.y) < Math.abs(best.d.at(-1)[1] - player.y) ? route : best);
+          available.splice(available.indexOf(nearest), 1);
+          const contact = nearest.d.at(-1), dir = st.off === 'NE' ? 1 : -1;
+          end = [contact[0] + dir * 1.7, contact[1]];
+          delay = 0; dur = nearest.dur ?? 600;
+        } else {
+          const close = /^(ILB|LB)$/.test(player.pos) ? 0.85 : 0.55;
+          end = [player.x + (finish[0] - player.x) * close, player.y + (finish[1] - player.y) * close];
+        }
+        routes.push({ id: `pursue-${player.id}`, p: player.id, k: 'route', move: true,
+          d: [[player.x, player.y], end], delay, dur: Math.max(450, dur) });
+      });
+    }
+    return routes;
+  };
 })(window.FD);
 
 /* ==== widgets/cards.js ==== */
@@ -3038,7 +3092,6 @@ window.FD = window.FD || {};
       players: [...ku, ...blockUnit(los), F.ball(los - 7, M)],
       routes: [
         { id: 'snap', k: 'pass', d: [[los, M], [los - 7, M]], delay: 0, dur: 280, lift: 0, arrow: false },
-        R.abs(ku, 'K', [[los - 7.6, M - 0.6]], { move: true, delay: 300, dur: 350 }),
         { id: 'kick', p: 'BALL', k: 'kick', d: [[los - 7, M], [120, M]], move: true, delay: 650, dur: 1100, lift: 0.08 },
       ],
     };
@@ -3058,6 +3111,7 @@ window.FD = window.FD || {};
   const o4 = F.off(108, { wide: 11 }), d4 = F.def(108, { front: 'nickel', cov: '0', wide: 11 });
   const slant4 = R.make(o4, 'X', 'slant', { move: true, c: 'r', delay: 300, dur: 900 });
   const qb4 = F.get(o4, 'QB'), end4 = slant4.d[slant4.d.length - 1];
+  const throw4 = [qb4.x - 1.2, qb4.y];
 
   // Step 5: field goal, LOS at the NYJ 20 (x 90), hold at x 83
   const k5 = kickPlay(90);
@@ -3076,7 +3130,7 @@ window.FD = window.FD || {};
 
   FD.CH.push({
     title: 'Objective & Scoring', sub: 'Touchdown, try, field goal, safety',
-    base: { cam: { x: 60, y: 26.67, w: 132 } },
+    base: { cam: { x: 60, y: 26.67, w: 132 }, motion: 'diagram' },
     steps: [
       {
         title: 'The objective',
@@ -3102,7 +3156,7 @@ window.FD = window.FD || {};
         title: 'Touchdown: 6 points',
         cam: CAM_RZ, los: 102, fd: null, lbl: false, ball: false,
         players: [...o2, ...d2],
-        routes: [run2, ...R.blocks(o2, [...R.OL, 'TE', 'TE2'], 1.4, 1)],
+        routes: [run2],
         marks: [{ id: 'gl', type: 'line', x1: 110, y1: 10, x2: 110, y2: 43, c: 'y', w: 0.45 }],
         bug: { q: '1ST', clk: '9:47', down: 1, dist: 'GOAL', hs: 6, msg: 'TOUCHDOWN' },
         ov: [{ id: 'sg1', type: 'signal', pos: 'l', sig: 1, name: 'Touchdown', desc: 'Ball breaks the plane of the goal line in a player\'s possession', extra: '6 points' }],
@@ -3139,9 +3193,9 @@ window.FD = window.FD || {};
       {
         title: 'Or go for 2',
         cam: CAM_RZ, los: 108, fd: null, lbl: false, ball: false,
-        players: [...o4, ...d4, F.ball(qb4.x, qb4.y)],
-        routes: [slant4, R.make(o4, 'Z', 'out5'), R.make(o4, 'H', 'in5'), R.make(o4, 'TE', 'flat'), ...R.blocks(o4, R.OL, 0.6),
-          { id: 'bf4', p: 'BALL', k: 'pass', d: [[qb4.x, qb4.y], end4], move: true, delay: 900, dur: 450 }],
+        players: [...o4, ...d4, F.ball(...throw4)],
+        routes: [slant4, R.abs(o4, 'QB', [throw4], { move: true, dur: 350 }),
+          { id: 'bf4', p: 'BALL', k: 'pass', d: [throw4, end4], move: true, delay: 900, dur: 450 }],
         marks: [{ id: 'two-t', type: 'text', x: 106, y: 13.6, t: 'SNAP AT THE 2', size: 1.4, c: 'y', anchor: 'end' }],
         bug: { q: '2ND', clk: '11:20', hs: 15, msg: '2-POINT TRY GOOD' },
         tags: ['COLLEGE: 2-point try snapped from the 3'],
@@ -3181,7 +3235,6 @@ window.FD = window.FD || {};
         routes: [
           R.abs(o6, 'RB', [[7, M + 2.5], [8.6, M + 4.8]], { k: 'run', move: true, curve: true, delay: 350, dur: 900 }),
           R.abs(d6, 'DE2', [[11.5, M + 6.4], [9.4, M + 5.2]], { move: true, c: 'r', delay: 300, dur: 1000 }),
-          ...R.blocks(o6, R.OL, 0.8, 0.5),
         ],
         marks: [
           { id: 'sf-ez', type: 'rect', x: 0, y: 0, w: 10, h: 53.33, c: 'r', op: 0.14, stroke: false },
@@ -7519,7 +7572,6 @@ FD.CH = []; FD.GLOSSARY = []; FD.I18N = {};
       players: [...ku, ...blockUnit(los), F.ball(los - 7, M)],
       routes: [
         { id: 'snap', k: 'pass', d: [[los, M], [los - 7, M]], delay: 0, dur: 280, lift: 0, arrow: false },
-        R.abs(ku, 'K', [[los - 7.6, M - 0.6]], { move: true, delay: 300, dur: 350 }),
         { id: 'kick', p: 'BALL', k: 'kick', d: [[los - 7, M], [120, M]], move: true, delay: 650, dur: 1100, lift: 0.08 },
       ],
     };
@@ -7539,6 +7591,7 @@ FD.CH = []; FD.GLOSSARY = []; FD.I18N = {};
   const o4 = F.off(108, { wide: 11 }), d4 = F.def(108, { front: 'nickel', cov: '0', wide: 11 });
   const slant4 = R.make(o4, 'X', 'slant', { move: true, c: 'r', delay: 300, dur: 900 });
   const qb4 = F.get(o4, 'QB'), end4 = slant4.d[slant4.d.length - 1];
+  const throw4 = [qb4.x - 1.2, qb4.y];
 
   // Step 5: field goal, LOS at the NYJ 20 (x 90), hold at x 83
   const k5 = kickPlay(90);
@@ -7557,7 +7610,7 @@ FD.CH = []; FD.GLOSSARY = []; FD.I18N = {};
 
   FD.CH.push({
     title: 'המטרה והניקוד', sub: 'טאצ\'דאון, נקודה נוספת, פילד גול, סייפטי',
-    base: { cam: { x: 60, y: 26.67, w: 132 } },
+    base: { cam: { x: 60, y: 26.67, w: 132 }, motion: 'diagram' },
     steps: [
       {
         title: 'המטרה',
@@ -7583,7 +7636,7 @@ FD.CH = []; FD.GLOSSARY = []; FD.I18N = {};
         title: 'טאצ\'דאון: 6 נקודות',
         cam: CAM_RZ, los: 102, fd: null, lbl: false, ball: false,
         players: [...o2, ...d2],
-        routes: [run2, ...R.blocks(o2, [...R.OL, 'TE', 'TE2'], 1.4, 1)],
+        routes: [run2],
         marks: [{ id: 'gl', type: 'line', x1: 110, y1: 10, x2: 110, y2: 43, c: 'y', w: 0.45 }],
         bug: { q: '1ST', clk: '9:47', down: 1, dist: 'GOAL', hs: 6, msg: 'TOUCHDOWN' },
         ov: [{ id: 'sg1', type: 'signal', pos: 'l', sig: 1, name: 'טאצ\'דאון', desc: 'הכדור חוצה את מישור קו הגול כשהוא בידי שחקן', extra: '6 נקודות' }],
@@ -7620,9 +7673,9 @@ FD.CH = []; FD.GLOSSARY = []; FD.I18N = {};
       {
         title: 'או ללכת על 2',
         cam: CAM_RZ, los: 108, fd: null, lbl: false, ball: false,
-        players: [...o4, ...d4, F.ball(qb4.x, qb4.y)],
-        routes: [slant4, R.make(o4, 'Z', 'out5'), R.make(o4, 'H', 'in5'), R.make(o4, 'TE', 'flat'), ...R.blocks(o4, R.OL, 0.6),
-          { id: 'bf4', p: 'BALL', k: 'pass', d: [[qb4.x, qb4.y], end4], move: true, delay: 900, dur: 450 }],
+        players: [...o4, ...d4, F.ball(...throw4)],
+        routes: [slant4, R.abs(o4, 'QB', [throw4], { move: true, dur: 350 }),
+          { id: 'bf4', p: 'BALL', k: 'pass', d: [throw4, end4], move: true, delay: 900, dur: 450 }],
         marks: [{ id: 'two-t', type: 'text', x: 106, y: 13.6, t: 'סנאפ מה-2', size: 1.4, c: 'y', anchor: 'end' }],
         bug: { q: '2ND', clk: '11:20', hs: 15, msg: '2-POINT TRY GOOD' },
         tags: ['מכללות: ניסיון ה-2 נקודות מתחיל מה-3'],
@@ -7662,7 +7715,6 @@ FD.CH = []; FD.GLOSSARY = []; FD.I18N = {};
         routes: [
           R.abs(o6, 'RB', [[7, M + 2.5], [8.6, M + 4.8]], { k: 'run', move: true, curve: true, delay: 350, dur: 900 }),
           R.abs(d6, 'DE2', [[11.5, M + 6.4], [9.4, M + 5.2]], { move: true, c: 'r', delay: 300, dur: 1000 }),
-          ...R.blocks(o6, R.OL, 0.8, 0.5),
         ],
         marks: [
           { id: 'sf-ez', type: 'rect', x: 0, y: 0, w: 10, h: 53.33, c: 'r', op: 0.14, stroke: false },
