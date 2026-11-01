@@ -331,11 +331,11 @@
   }
   function players(prev, st, instant) {
     const moves = new Map();
-    (st._moveRoutes || FD.playRoutes(st, prev)).forEach((r) => moves.set(r.p, r));
+    (st._moveRoutes || FD.playRoutes(st, prev)).forEach((r) => moves.set(r.p, [...(moves.get(r.p) || []), r].sort((a, b) => (a.delay ?? 0) - (b.delay ?? 0))));
     const prevRouteSig = new Map((prev._moveRoutes || prev.routes || []).map((r) => [r.id, JSON.stringify(r)]));
     const diagram = st.motion === 'diagram';
     const reset = instant || diagram ? 0 : Math.max(0, ...st.players.map((p) => {
-      const move = moves.get(p.id), current = FD._pl.get(p.id);
+      const move = moves.get(p.id)?.[0], current = FD._pl.get(p.id);
       if (!move || !current || prevRouteSig.get(move.id) === JSON.stringify(move)) return 0;
       return Math.hypot(current.x - move.d[0][0], current.y - move.d[0][1]) > 0.05 ? 450 : 0;
     }));
@@ -343,8 +343,8 @@
     st.players.forEach((p) => {
       keep.add(p.id);
       let o = FD._pl.get(p.id);
-      const mv = moves.get(p.id);
-      const end = mv ? routeEnd(mv) : [p.x, p.y];
+      const legs = moves.get(p.id), mv = legs?.[0];
+      const end = legs ? routeEnd(legs[legs.length - 1]) : [p.x, p.y];
       if (o && o.shapeKey !== (p.shape || (p.t === st.off ? 'O' : 'X'))) { o.g.remove(); FD._pl.delete(p.id); o = null; }
       if (!o) {
         const g = buildPlayer(p, st);
@@ -356,17 +356,20 @@
       }
       decorate(o.g, p, st);
       const set = (x, y) => { o.x = x; o.y = y; o.g.setAttribute('transform', `translate(${x.toFixed(3)} ${y.toFixed(3)})`); };
-      const animateMove = mv && !instant && prevRouteSig.get(mv.id) !== JSON.stringify(mv);
+      const animateMove = legs && !instant && legs.some((m) => prevRouteSig.get(m.id) !== JSON.stringify(m));
       if (instant || (diagram && !animateMove)) { set(end[0], end[1]); return; }
       if (animateMove) {
-        const fx = o.x, fy = o.y, pts = samplePath(mv);
+        const fx = o.x, fy = o.y;
         const start = mv.d[0];
         if (reset) TL.add(0, reset, (k) => set(FD.lerp(fx, start[0], k), FD.lerp(fy, start[1], k)));
         else set(start[0], start[1]);
-        const delay = reset + (mv.delay ?? 0) * FD.SPEED;
-        const L = pts.length - 1;
-        const dur = (mv.dur ?? Math.max(450, Math.min(1400, mvLen(pts) * 45))) * FD.SPEED;
-        TL.add(delay, dur, (k) => { const f = k * L, i = Math.min(L - 1, Math.floor(f)), r = f - i; set(FD.lerp(pts[i][0], pts[i + 1][0], r), FD.lerp(pts[i][1], pts[i + 1][1], r)); }, mv.k === 'motion' ? E.inOut : E.lin);
+        legs.forEach((m) => {
+          const pts = samplePath(m);
+          const delay = reset + (m.delay ?? 0) * FD.SPEED;
+          const L = pts.length - 1;
+          const dur = (m.dur ?? Math.max(450, Math.min(1400, mvLen(pts) * 45))) * FD.SPEED;
+          TL.add(delay, dur, (k) => { const f = k * L, i = Math.min(L - 1, Math.floor(f)), r = f - i; set(FD.lerp(pts[i][0], pts[i + 1][0], r), FD.lerp(pts[i][1], pts[i + 1][1], r)); }, m.k === 'motion' ? E.inOut : E.lin);
+        });
         return;
       }
       if (Math.hypot(o.x - end[0], o.y - end[1]) > 0.01) {
@@ -502,12 +505,14 @@
     FD.renderOverlays(prev, st, instant);
     FD.mountWidget(prev, st);
     if (phoneDiagram && !instant) {
-      const wait = Math.max(0, fieldMotionEnd - TL.now);
-      if (wait) TL.add(wait, 1, () => { if (FD.cur === st) stage.classList.remove('diagram-animating'); }, E.lin);
-      else stage.classList.remove('diagram-animating');
+      // Let viewers read the field for a few seconds before the info box covers part of it.
+      const wait = Math.max(3000, fieldMotionEnd - TL.now);
+      TL.add(wait, 1, () => { if (FD.cur === st) stage.classList.remove('diagram-animating'); }, E.lin);
     } else {
       stage.classList.remove('diagram-animating');
     }
+    stage.classList.remove('ov-collapsed');
+    FD.syncOvToggle(phoneDiagram && (st.ov || []).length > 0);
     if (opt.forward && !instant && st.sfx) (Array.isArray(st.sfx) ? st.sfx : [st.sfx]).forEach((s) => {
       const o = typeof s === 'string' ? { n: s, at: 0 } : s;
       setTimeout(() => { if (FD.cur === st) FD.sfx(o.n); }, (o.at || 0) * FD.SPEED);

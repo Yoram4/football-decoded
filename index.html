@@ -768,7 +768,16 @@ body.explore #stage{position:fixed;inset:0 38vw 0 0}
     visibility:hidden!important;opacity:0!important;pointer-events:none!important
   }
   .diagram-phone #l3{transition:none}
+  /* Box sits on top of a tab-style toggle, which rests just above the touch nav. */
+  .diagram-phone #ov .ov:not(.pos-full){bottom:102px}
+  .diagram-phone #ovToggle{display:inline-flex;align-items:center;position:absolute;left:50%;translate:-50% 0;bottom:72px;z-index:30;height:30px;padding:0 16px;border:1px solid rgba(255,255,255,.25);border-top:0;border-radius:0 0 10px 10px;background:var(--glass);color:var(--ink);font:700 12px/1 var(--ui);letter-spacing:.04em;box-shadow:0 1vh 3vh rgba(0,0,0,.45);pointer-events:auto;touch-action:manipulation}
+  .diagram-animating #ovToggle,.ov-collapsed #ovToggle{border-top:1px solid rgba(255,255,255,.25);border-radius:10px}
+  #ovToggle .show,.diagram-animating #ovToggle .hide,.ov-collapsed #ovToggle .hide{display:none}
+  .diagram-animating #ovToggle .show,.ov-collapsed #ovToggle .show{display:inline}
+  .ov-collapsed #ov{visibility:hidden!important;opacity:0!important;pointer-events:none!important}
 }
+#ovToggle{display:none}
+#ovToggle[hidden],.frame-active #ovToggle{display:none!important}
 
 </style>
 <style id="heRtlStyles" media="not all">
@@ -1373,11 +1382,11 @@ window.FD = window.FD || {};
   }
   function players(prev, st, instant) {
     const moves = new Map();
-    (st._moveRoutes || FD.playRoutes(st, prev)).forEach((r) => moves.set(r.p, r));
+    (st._moveRoutes || FD.playRoutes(st, prev)).forEach((r) => moves.set(r.p, [...(moves.get(r.p) || []), r].sort((a, b) => (a.delay ?? 0) - (b.delay ?? 0))));
     const prevRouteSig = new Map((prev._moveRoutes || prev.routes || []).map((r) => [r.id, JSON.stringify(r)]));
     const diagram = st.motion === 'diagram';
     const reset = instant || diagram ? 0 : Math.max(0, ...st.players.map((p) => {
-      const move = moves.get(p.id), current = FD._pl.get(p.id);
+      const move = moves.get(p.id)?.[0], current = FD._pl.get(p.id);
       if (!move || !current || prevRouteSig.get(move.id) === JSON.stringify(move)) return 0;
       return Math.hypot(current.x - move.d[0][0], current.y - move.d[0][1]) > 0.05 ? 450 : 0;
     }));
@@ -1385,8 +1394,8 @@ window.FD = window.FD || {};
     st.players.forEach((p) => {
       keep.add(p.id);
       let o = FD._pl.get(p.id);
-      const mv = moves.get(p.id);
-      const end = mv ? routeEnd(mv) : [p.x, p.y];
+      const legs = moves.get(p.id), mv = legs?.[0];
+      const end = legs ? routeEnd(legs[legs.length - 1]) : [p.x, p.y];
       if (o && o.shapeKey !== (p.shape || (p.t === st.off ? 'O' : 'X'))) { o.g.remove(); FD._pl.delete(p.id); o = null; }
       if (!o) {
         const g = buildPlayer(p, st);
@@ -1398,17 +1407,20 @@ window.FD = window.FD || {};
       }
       decorate(o.g, p, st);
       const set = (x, y) => { o.x = x; o.y = y; o.g.setAttribute('transform', `translate(${x.toFixed(3)} ${y.toFixed(3)})`); };
-      const animateMove = mv && !instant && prevRouteSig.get(mv.id) !== JSON.stringify(mv);
+      const animateMove = legs && !instant && legs.some((m) => prevRouteSig.get(m.id) !== JSON.stringify(m));
       if (instant || (diagram && !animateMove)) { set(end[0], end[1]); return; }
       if (animateMove) {
-        const fx = o.x, fy = o.y, pts = samplePath(mv);
+        const fx = o.x, fy = o.y;
         const start = mv.d[0];
         if (reset) TL.add(0, reset, (k) => set(FD.lerp(fx, start[0], k), FD.lerp(fy, start[1], k)));
         else set(start[0], start[1]);
-        const delay = reset + (mv.delay ?? 0) * FD.SPEED;
-        const L = pts.length - 1;
-        const dur = (mv.dur ?? Math.max(450, Math.min(1400, mvLen(pts) * 45))) * FD.SPEED;
-        TL.add(delay, dur, (k) => { const f = k * L, i = Math.min(L - 1, Math.floor(f)), r = f - i; set(FD.lerp(pts[i][0], pts[i + 1][0], r), FD.lerp(pts[i][1], pts[i + 1][1], r)); }, mv.k === 'motion' ? E.inOut : E.lin);
+        legs.forEach((m) => {
+          const pts = samplePath(m);
+          const delay = reset + (m.delay ?? 0) * FD.SPEED;
+          const L = pts.length - 1;
+          const dur = (m.dur ?? Math.max(450, Math.min(1400, mvLen(pts) * 45))) * FD.SPEED;
+          TL.add(delay, dur, (k) => { const f = k * L, i = Math.min(L - 1, Math.floor(f)), r = f - i; set(FD.lerp(pts[i][0], pts[i + 1][0], r), FD.lerp(pts[i][1], pts[i + 1][1], r)); }, m.k === 'motion' ? E.inOut : E.lin);
+        });
         return;
       }
       if (Math.hypot(o.x - end[0], o.y - end[1]) > 0.01) {
@@ -1544,12 +1556,14 @@ window.FD = window.FD || {};
     FD.renderOverlays(prev, st, instant);
     FD.mountWidget(prev, st);
     if (phoneDiagram && !instant) {
-      const wait = Math.max(0, fieldMotionEnd - TL.now);
-      if (wait) TL.add(wait, 1, () => { if (FD.cur === st) stage.classList.remove('diagram-animating'); }, E.lin);
-      else stage.classList.remove('diagram-animating');
+      // Let viewers read the field for a few seconds before the info box covers part of it.
+      const wait = Math.max(3000, fieldMotionEnd - TL.now);
+      TL.add(wait, 1, () => { if (FD.cur === st) stage.classList.remove('diagram-animating'); }, E.lin);
     } else {
       stage.classList.remove('diagram-animating');
     }
+    stage.classList.remove('ov-collapsed');
+    FD.syncOvToggle(phoneDiagram && (st.ov || []).length > 0);
     if (opt.forward && !instant && st.sfx) (Array.isArray(st.sfx) ? st.sfx : [st.sfx]).forEach((s) => {
       const o = typeof s === 'string' ? { n: s, at: 0 } : s;
       setTimeout(() => { if (FD.cur === st) FD.sfx(o.n); }, (o.at || 0) * FD.SPEED);
@@ -1626,6 +1640,26 @@ window.FD = window.FD || {};
     panel.hidden = !available || !open;
     if (!available) toggle.setAttribute('aria-expanded', 'false');
   }
+
+  // Phone field diagrams: let the viewer hide/show the info box that covers the play.
+  FD.syncOvToggle = function (on) {
+    let b = FD.$('#ovToggle');
+    if (!b) {
+      b = FD.h('button', { id: 'ovToggle', type: 'button' });
+      ['pointerdown', 'pointerup'].forEach((ev) => b.addEventListener(ev, (e) => e.stopPropagation()));
+      b.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const stage = FD.$('#stage');
+        if (stage.classList.contains('diagram-animating') || stage.classList.contains('ov-collapsed')) {
+          stage.classList.remove('diagram-animating', 'ov-collapsed');
+        } else stage.classList.add('ov-collapsed');
+      });
+      FD.$('#hud').append(b);
+    }
+    b.setAttribute('aria-label', FD.T('Show or hide the info box'));
+    b.innerHTML = `<span class="show">${FD.T('Show info')}</span><span class="hide">${FD.T('Hide info')}</span>`;
+    b.hidden = !on;
+  };
 
   FD.renderHUD = function (prev, st, instant) {
     const bug = FD.$('#bug');
@@ -6545,17 +6579,21 @@ window.FD = window.FD || {};
 
   const LOS = 45;
   const PRE = [...F.off(LOS, { pers: '11' }), ...F.def(LOS, { front: 'nickel', cov: '2' })];
-  const POST = [...PRE, F.ball(40, M)];
+  const POST = [...PRE, F.ball(LOS, M)];
+  const hide = { c: 'rgba(0,0,0,0)', arrow: false, glow: false };
   const postR = [
     ...R.blocks(POST, R.OL, 0.9, 0),
-    R.abs(POST, 'NE-QB', [[37.5, M]], { k: 'run', move: true, delay: 100, dur: 500 }),
-    R.make(POST, 'NE-Z', 'dig', { c: 'r', move: true, delay: 250, dur: 1500 }),
+    { id: 'snap', p: 'BALL', k: 'pass', d: [[LOS, M], [40, M]], move: true, delay: 0, dur: 200, lift: 0, arrow: false },
+    R.abs(POST, 'NE-QB', [[38.5, M]], { k: 'route', move: true, delay: 200, dur: 350, ...hide }),
+    { id: 'drop', p: 'BALL', k: 'route', d: [[40, M], [38.5, M]], move: true, delay: 200, dur: 350, ...hide },
+    R.make(POST, 'NE-Z', 'dig', { move: true, delay: 250, dur: 1500 }),
     R.make(POST, 'NE-X', 'go', { delay: 250, dur: 1500 }),
     R.make(POST, 'NE-H', 'seam', { delay: 250, dur: 1400 }),
-    R.make(POST, 'NE-TE', 'flat', { delay: 250, dur: 900 }),
-    R.abs(POST, 'NYJ-DE1', [[44.5, M - 5], [39.5, M - 2]], { k: 'run', c: 'w', move: true, delay: 150, dur: 1200, curve: true }),
-    R.abs(POST, 'NYJ-DE2', [[44.5, M + 8], [39.5, M + 3]], { k: 'run', c: 'w', move: true, delay: 150, dur: 1200, curve: true }),
-    { id: 'bf', p: 'BALL', k: 'pass', d: [[37.5, M], [55.5, M + 10]], move: true, delay: 1350, dur: 550 },
+    R.make(POST, 'NE-TE', 'flat', { c: 'r', move: true, delay: 250, dur: 950 }),
+    R.abs(POST, 'NYJ-DE1', [[44.5, M - 5], [40.3, M - 1.8]], { k: 'run', c: 'w', move: true, delay: 150, dur: 1200, curve: true }),
+    R.abs(POST, 'NYJ-DE2', [[44.5, M + 8], [40.3, M + 2.2]], { k: 'run', c: 'w', move: true, delay: 150, dur: 1200, curve: true }),
+    // released at 750: the ends are halfway through their 150-1350 rush
+    { id: 'bf', p: 'BALL', k: 'pass', d: [[38.5, M], [47.1, M + 12.4]], move: true, delay: 750, dur: 450 },
   ];
 
   FD.CH.push({
@@ -7000,6 +7038,9 @@ FD.CH = []; FD.GLOSSARY = []; FD.I18N = {};
     'Good to know: more about this slide': 'כדאי לדעת: עוד על השקף',
     'Close': 'סגירה',
     'Good to know': 'כדאי לדעת',
+    'Show or hide the info box': 'הצגה או הסתרה של תיבת ההסבר',
+    'Show info': 'הצג הסבר',
+    'Hide info': 'הסתר הסבר',
     'Going deeper': 'לסקרנים',
     'Key points': 'עיקרי הדברים',
     'Touch navigation': 'ניווט מגע',
@@ -11025,17 +11066,21 @@ FD.CH = []; FD.GLOSSARY = []; FD.I18N = {};
 
   const LOS = 45;
   const PRE = [...F.off(LOS, { pers: '11' }), ...F.def(LOS, { front: 'nickel', cov: '2' })];
-  const POST = [...PRE, F.ball(40, M)];
+  const POST = [...PRE, F.ball(LOS, M)];
+  const hide = { c: 'rgba(0,0,0,0)', arrow: false, glow: false };
   const postR = [
     ...R.blocks(POST, R.OL, 0.9, 0),
-    R.abs(POST, 'NE-QB', [[37.5, M]], { k: 'run', move: true, delay: 100, dur: 500 }),
-    R.make(POST, 'NE-Z', 'dig', { c: 'r', move: true, delay: 250, dur: 1500 }),
+    { id: 'snap', p: 'BALL', k: 'pass', d: [[LOS, M], [40, M]], move: true, delay: 0, dur: 200, lift: 0, arrow: false },
+    R.abs(POST, 'NE-QB', [[38.5, M]], { k: 'route', move: true, delay: 200, dur: 350, ...hide }),
+    { id: 'drop', p: 'BALL', k: 'route', d: [[40, M], [38.5, M]], move: true, delay: 200, dur: 350, ...hide },
+    R.make(POST, 'NE-Z', 'dig', { move: true, delay: 250, dur: 1500 }),
     R.make(POST, 'NE-X', 'go', { delay: 250, dur: 1500 }),
     R.make(POST, 'NE-H', 'seam', { delay: 250, dur: 1400 }),
-    R.make(POST, 'NE-TE', 'flat', { delay: 250, dur: 900 }),
-    R.abs(POST, 'NYJ-DE1', [[44.5, M - 5], [39.5, M - 2]], { k: 'run', c: 'w', move: true, delay: 150, dur: 1200, curve: true }),
-    R.abs(POST, 'NYJ-DE2', [[44.5, M + 8], [39.5, M + 3]], { k: 'run', c: 'w', move: true, delay: 150, dur: 1200, curve: true }),
-    { id: 'bf', p: 'BALL', k: 'pass', d: [[37.5, M], [55.5, M + 10]], move: true, delay: 1350, dur: 550 },
+    R.make(POST, 'NE-TE', 'flat', { c: 'r', move: true, delay: 250, dur: 950 }),
+    R.abs(POST, 'NYJ-DE1', [[44.5, M - 5], [40.3, M - 1.8]], { k: 'run', c: 'w', move: true, delay: 150, dur: 1200, curve: true }),
+    R.abs(POST, 'NYJ-DE2', [[44.5, M + 8], [40.3, M + 2.2]], { k: 'run', c: 'w', move: true, delay: 150, dur: 1200, curve: true }),
+    // released at 750: the ends are halfway through their 150-1350 rush
+    { id: 'bf', p: 'BALL', k: 'pass', d: [[38.5, M], [47.1, M + 12.4]], move: true, delay: 750, dur: 450 },
   ];
 
   FD.CH.push({

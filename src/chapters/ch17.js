@@ -15,17 +15,21 @@
 
   const LOS = 45;
   const PRE = [...F.off(LOS, { pers: '11' }), ...F.def(LOS, { front: 'nickel', cov: '2' })];
-  const POST = [...PRE, F.ball(40, M)];
+  const POST = [...PRE, F.ball(LOS, M)];
+  const hide = { c: 'rgba(0,0,0,0)', arrow: false, glow: false };
   const postR = [
     ...R.blocks(POST, R.OL, 0.9, 0),
-    R.abs(POST, 'NE-QB', [[37.5, M]], { k: 'run', move: true, delay: 100, dur: 500 }),
-    R.make(POST, 'NE-Z', 'dig', { c: 'r', move: true, delay: 250, dur: 1500 }),
+    { id: 'snap', p: 'BALL', k: 'pass', d: [[LOS, M], [40, M]], move: true, delay: 0, dur: 200, lift: 0, arrow: false },
+    R.abs(POST, 'NE-QB', [[38.5, M]], { k: 'route', move: true, delay: 200, dur: 350, ...hide }),
+    { id: 'drop', p: 'BALL', k: 'route', d: [[40, M], [38.5, M]], move: true, delay: 200, dur: 350, ...hide },
+    R.make(POST, 'NE-Z', 'dig', { move: true, delay: 250, dur: 1500 }),
     R.make(POST, 'NE-X', 'go', { delay: 250, dur: 1500 }),
     R.make(POST, 'NE-H', 'seam', { delay: 250, dur: 1400 }),
-    R.make(POST, 'NE-TE', 'flat', { delay: 250, dur: 900 }),
-    R.abs(POST, 'NYJ-DE1', [[44.5, M - 5], [39.5, M - 2]], { k: 'run', c: 'w', move: true, delay: 150, dur: 1200, curve: true }),
-    R.abs(POST, 'NYJ-DE2', [[44.5, M + 8], [39.5, M + 3]], { k: 'run', c: 'w', move: true, delay: 150, dur: 1200, curve: true }),
-    { id: 'bf', p: 'BALL', k: 'pass', d: [[37.5, M], [55.5, M + 10]], move: true, delay: 1350, dur: 550 },
+    R.make(POST, 'NE-TE', 'flat', { c: 'r', move: true, delay: 250, dur: 950 }),
+    R.abs(POST, 'NYJ-DE1', [[44.5, M - 5], [40.3, M - 1.8]], { k: 'run', c: 'w', move: true, delay: 150, dur: 1200, curve: true }),
+    R.abs(POST, 'NYJ-DE2', [[44.5, M + 8], [40.3, M + 2.2]], { k: 'run', c: 'w', move: true, delay: 150, dur: 1200, curve: true }),
+    // released at 750: the ends are halfway through their 150-1350 rush
+    { id: 'bf', p: 'BALL', k: 'pass', d: [[38.5, M], [47.1, M + 12.4]], move: true, delay: 750, dur: 450 },
   ];
 
   FD.CH.push({

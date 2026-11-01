@@ -758,4 +758,13 @@ body.explore #stage{position:fixed;inset:0 38vw 0 0}
     visibility:hidden!important;opacity:0!important;pointer-events:none!important
   }
   .diagram-phone #l3{transition:none}
+  /* Box sits on top of a tab-style toggle, which rests just above the touch nav. */
+  .diagram-phone #ov .ov:not(.pos-full){bottom:102px}
+  .diagram-phone #ovToggle{display:inline-flex;align-items:center;position:absolute;left:50%;translate:-50% 0;bottom:72px;z-index:30;height:30px;padding:0 16px;border:1px solid rgba(255,255,255,.25);border-top:0;border-radius:0 0 10px 10px;background:var(--glass);color:var(--ink);font:700 12px/1 var(--ui);letter-spacing:.04em;box-shadow:0 1vh 3vh rgba(0,0,0,.45);pointer-events:auto;touch-action:manipulation}
+  .diagram-animating #ovToggle,.ov-collapsed #ovToggle{border-top:1px solid rgba(255,255,255,.25);border-radius:10px}
+  #ovToggle .show,.diagram-animating #ovToggle .hide,.ov-collapsed #ovToggle .hide{display:none}
+  .diagram-animating #ovToggle .show,.ov-collapsed #ovToggle .show{display:inline}
+  .ov-collapsed #ov{visibility:hidden!important;opacity:0!important;pointer-events:none!important}
 }
+#ovToggle{display:none}
+#ovToggle[hidden],.frame-active #ovToggle{display:none!important}

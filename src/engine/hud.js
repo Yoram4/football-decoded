@@ -54,6 +54,26 @@
     if (!available) toggle.setAttribute('aria-expanded', 'false');
   }
 
+  // Phone field diagrams: let the viewer hide/show the info box that covers the play.
+  FD.syncOvToggle = function (on) {
+    let b = FD.$('#ovToggle');
+    if (!b) {
+      b = FD.h('button', { id: 'ovToggle', type: 'button' });
+      ['pointerdown', 'pointerup'].forEach((ev) => b.addEventListener(ev, (e) => e.stopPropagation()));
+      b.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const stage = FD.$('#stage');
+        if (stage.classList.contains('diagram-animating') || stage.classList.contains('ov-collapsed')) {
+          stage.classList.remove('diagram-animating', 'ov-collapsed');
+        } else stage.classList.add('ov-collapsed');
+      });
+      FD.$('#hud').append(b);
+    }
+    b.setAttribute('aria-label', FD.T('Show or hide the info box'));
+    b.innerHTML = `<span class="show">${FD.T('Show info')}</span><span class="hide">${FD.T('Hide info')}</span>`;
+    b.hidden = !on;
+  };
+
   FD.renderHUD = function (prev, st, instant) {
     const bug = FD.$('#bug');
     const b = st.bug, pb = prev.bug || {};
