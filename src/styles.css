@@ -203,6 +203,7 @@ body.preview .key-hints,body.preview .desk-tools{display:none}
 .t-menu button:hover{border-color:var(--fd-yellow);background:rgba(0,34,68,.95)}
 
 .ov-big{text-align:center;max-width:80vw}
+.ov-big:not(.pos-c){padding:1.6vh 2.4vh;background:var(--glass);border:1px solid rgba(255,255,255,.12);border-radius:10px;box-shadow:0 2vh 5vh rgba(0,0,0,.55);backdrop-filter:blur(6px)}
 .ov-chapter{display:flex;gap:3vh;align-items:stretch;width:min(70vw,1200px);background:linear-gradient(135deg,rgba(0,34,68,.97),rgba(10,58,112,.95));border-left:1vh solid var(--ne-red);border-radius:10px;padding:3vh 3.4vh;box-shadow:0 0 0 100vmax rgba(5,8,15,.6),0 2vh 6vh rgba(0,0,0,.6)}
 .ci-num{font-family:var(--hd);font-size:20vh;line-height:.85;color:var(--fd-yellow);text-shadow:0 0 4vh rgba(250,204,21,.35)}
 .ci-k{font:800 1.7vh var(--ui);letter-spacing:.24em;text-transform:uppercase;color:var(--ne-silver)}
