@@ -12,7 +12,13 @@
     FD.idx = i;
     closeTransient();
     clearTimeout(FD._auto);
-    FD.render(FD.STEPS[i], { instant: opt.instant || !forward, forward });
+    if (!forward && !opt.instant) {
+      // Going back: rebuild the preceding state, then play this step from its start.
+      let p = i - 1;
+      while (p >= 0 && !vis(p)) p--;
+      if (p >= 0) FD.render(FD.STEPS[p], { instant: true }); else FD.cur = null;
+      FD.render(FD.STEPS[i], { forward: true });
+    } else FD.render(FD.STEPS[i], { instant: opt.instant, forward });
     FD.updateTouchProgress && FD.updateTouchProgress(i);
     const st = FD.STEPS[i];
     if (st.auto && forward && !opt.instant && FD.mode === 'live') FD._auto = setTimeout(function tick() { if (FD.TL.paused) { FD._auto = setTimeout(tick, 300); return; } if (FD.STEPS[FD.idx] === st) FD.next(); }, st.auto * FD.SPEED);
